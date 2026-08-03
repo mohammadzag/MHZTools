@@ -1,0 +1,48 @@
+{
+  "name": "mhz-tools",
+  "version": "1.0.0",
+  "description": "MHZ Tools Security Utility Suite",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "package": "electron-builder"
+  },
+  "keywords": [
+    "security",
+    "cryptography",
+    "utilities"
+  ],
+  "author": "MHZ",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^43.2.0",
+    "electron-builder": "^26.15.3",
+    "electron-packager": "^17.1.2"
+  },
+  "build": {
+    "appId": "com.mhz.tools",
+    "productName": "MHZTools",
+    "win": {
+      "target": [
+        "portable"
+      ]
+    },
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "index.html",
+      "styles.css",
+      "app.js",
+      "main.js",
+      "crypto-js.js",
+      "profile_avatar.jpg",
+      "qrious.js"
+    ],
+    "asar": true
+  },
+  "dependencies": {
+    "crypto-js": "^4.2.0",
+    "qrious": "^4.0.2"
+  }
+}
