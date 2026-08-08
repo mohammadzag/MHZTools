@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MHZ Tools - Security Utility Suite</title>
+    <meta name="description" content="A comprehensive, client-side cryptographic, defensive, and network planning utility suite for cybersecurity professionals.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons (Lucide Icons via CDN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i data-lucide="shield-alert" class="logo-icon"></i>
+                    <span class="logo-text">MHZ <span class="accent-text">TOOLS</span></span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-item active" data-tab="hash-calc">
+                    <i data-lucide="hash"></i>
+                    <span>Hash Calculator</span>
+                </button>
+                <button class="nav-item" data-tab="password-gen">
+                    <i data-lucide="key-round"></i>
+                    <span>Password Gen</span>
+                </button>
+                <button class="nav-item" data-tab="encoder-decoder">
+                    <i data-lucide="binary"></i>
+                    <span>Encoder/Decoder</span>
+                </button>
+                <button class="nav-item" data-tab="subnet-calc">
+                    <i data-lucide="network"></i>
+                    <span>Subnet Calc</span>
+                </button>
+                <button class="nav-item" data-tab="encrypter">
+                    <i data-lucide="lock"></i>
+                    <span>Cryptography</span>
+                </button>
+                <button class="nav-item" data-tab="link-shaper">
+                    <i data-lucide="link-2"></i>
+                    <span>Link Shortener</span>
+                </button>
+                <button class="nav-item" data-tab="about-me">
+                    <i data-lucide="info"></i>
+                    <span>About Developer</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="pulse-dot"></span>
+                    <span class="status-text">Client-Side Secure</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+            <header class="content-header">
+                <div class="header-title">
+                    <h1 id="page-title">Hash Calculator</h1>
+                    <p id="page-subtitle">Generate cryptographic checksums for data integrity verification.</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon theme-toggle-btn" id="theme-toggle" title="Toggle Light/Dark Theme">
+                        <i data-lucide="sun"></i>
+                    </button>
+                    <span class="badge">SECURE CONTEXT</span>
+                </div>
+            </header>
+
+            <div class="scroll-container">
+                <!-- Hash Calculator Section -->
+                <section id="hash-calc" class="tab-content active">
+                    <div class="card">
+                        <div class="card-header">
+                            <i data-lucide="hash" class="card-header-icon"></i>
+                            <h2>Cryptographic Hash Generator</h2>
+                        </div>
+
+                        <!-- Toggle switch for Input Type -->
+                        <div class="toggle-container">
+                            <button id="hash-mode-text" class="toggle-btn active">Text Input</button>
+                            <button id="hash-mode-file" class="toggle-btn">File / Folder Hashing</button>
+                        </div>
+
+                        <!-- Text Input Section -->
+                        <div id="hash-text-container">
+                            <div class="form-group">
+                                <label for="hash-input">Input Data</label>
+                                <textarea id="hash-input" placeholder="Enter text to hash..." rows="5"></textarea>
+                            </div>
+                            <div class="outputs-grid">
+                                <div class="output-row">
+                                    <span class="output-label">MD5</span>
+                                    <div class="copyable-output">
+                                        <input type="text" id="hash-md5" readonly placeholder="Waiting for input...">
+                                        <button class="btn-icon copy-btn" data-target="hash-md5"><i data-lucide="copy"></i></button>
+                                    </div>
+                                </div>
+                                <div class="output-row">
+                                    <span class="output-label">SHA-1</span>
+                                    <div class="copyable-output">
+                                        <input type="text" id="hash-sha1" readonly placeholder="Waiting for input...">
+                                        <button class="btn-icon copy-btn" data-target="hash-sha1"><i data-lucide="copy"></i></button>
+                                    </div>
+                                </div>
+                                <div class="output-row">
+                                    <span class="output-label">SHA-256</span>
+                                    <div class="copyable-output">
+                                        <input type="text" id="hash-sha256" readonly placeholder="Waiting for input...">
+                                        <button class="btn-icon copy-btn" data-target="hash-sha256"><i data-lucide="copy"></i></button>
+                                    </div>
+                                </div>
+                                <div class="output-row">
+                                    <span class="output-label">SHA-512</span>
+                                    <div class="copyable-output">
+                                        <input type="text" id="hash-sha512" readonly placeholder="Waiting for input...">
+                                        <button class="btn-icon copy-btn" data-target="hash-sha512"><i data-lucide="copy"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- File / Folder Input Section -->
+                        <div id="hash-file-container" class="hidden">
+                            <div class="drop-zone" id="drop-zone">
+                                <i data-lucide="upload-cloud" class="drop-zone-icon"></i>
+                                <p class="drop-zone-text">Drag and drop files or folders here</p>
+                                <p class="drop-zone-subtext">or select from local drive</p>
+                                <div class="drop-zone-actions">
+                                    <button class="btn btn-secondary btn-sm" id="btn-select-files">
+                                        <i data-lucide="file"></i> Select Files
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm" id="btn-select-folder">
+                                        <i data-lucide="folder"></i> Select Folder
+                                    </button>
+                                </div>
+                                <input type="file" id="file-input" class="hidden" multiple>
+                                <input type="file" id="folder-input" class="hidden" webkitdirectory directory multiple>
+                            </div>
+
+                            <!-- File Progress / List Table -->
+                            <div id="file-list-container" class="hidden">
+                                <h3 class="section-title-sm">Processed Items</h3>
+                                <div class="table-wrapper">
+                                    <table class="file-table" id="file-hash-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Item Name</th>
+                                                <th>Path</th>
+                                                <th>Size</th>
+                                                <th>Status / SHA-256 Hash</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="file-list-body">
+                                            <!-- Dynamically filled -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Password Generator Section -->
+                <section id="password-gen" class="tab-content">
+                    <div class="grid-two-cols">
+                        <div class="card">
+                            <div class="card-header">
+                                <i data-lucide="key-round" class="card-header-icon"></i>
+                                <h2>Generator Settings</h2>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="pass-length">Password Length (<span id="length-val">16</span>)</label>
+                                <input type="range" id="pass-length" min="8" max="64" value="16" class="slider">
+                            </div>
+
+                            <div class="checkbox-group">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="include-upper" checked>
+                                    <span class="checkmark"></span>
+                                    Uppercase Letters (A-Z)
+                                </label>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="include-lower" checked>
+                                    <span class="checkmark"></span>
+                                    Lowercase Letters (a-z)
+                                </label>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="include-numbers" checked>
+                                    <span class="checkmark"></span>
+                                    Numbers (0-9)
+                                </label>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="include-symbols" checked>
+                                    <span class="checkmark"></span>
+                                    Special Symbols (!@#$%^&*)
+                                </label>
+                            </div>
+
+                            <button id="generate-btn" class="btn btn-primary">
+                                <i data-lucide="refresh-cw"></i> Generate Password
+                            </button>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <i data-lucide="shield-check" class="card-header-icon"></i>
+                                <h2>Security Analysis</h2>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Generated Output</label>
+                                <div class="copyable-output large-output">
+                                    <input type="text" id="generated-password" readonly placeholder="Click generate...">
+                                    <button class="btn-icon copy-btn" data-target="generated-password"><i data-lucide="copy"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="strength-meter">
+                                <div class="strength-bar-container">
+                                    <div id="strength-bar" class="strength-bar"></div>
+                                </div>
+                                <div class="strength-labels">
+                                    <span>Entropy: <span id="entropy-value">0</span> bits</span>
+                                    <span id="strength-text" class="strength-badge">Weak</span>
+                                </div>
+                            </div>
+
+                            <div class="password-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Brute-Force Time estimate:</span>
+                                    <span id="crack-time" class="detail-value">Instant</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Encoder/Decoder Section -->
+                <section id="encoder-decoder" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <i data-lucide="binary" class="card-header-icon"></i>
+                            <h2>Data Encoder & Decoder</h2>
+                        </div>
+                        
+                        <div class="codec-grid">
+                            <div class="codec-panel">
+                                <div class="form-group">
+                                    <label for="codec-input">Input Data</label>
+                                    <textarea id="codec-input" placeholder="Type or paste payload here..." rows="6"></textarea>
+                                </div>
+                            </div>
+                            <div class="codec-controls">
+                                <div class="form-group">
+                                    <label for="codec-format">Format</label>
+                                    <select id="codec-format" class="custom-select">
+                                        <option value="base64">Base64</option>
+                                        <option value="hex">Hexadecimal</option>
+                                        <option value="url">URL Encoding</option>
+                                    </select>
+                                </div>
+                                <div class="btn-group-stacked">
+                                    <button id="encode-btn" class="btn btn-primary"><i data-lucide="arrow-right-left"></i> Encode</button>
+                                    <button id="decode-btn" class="btn btn-secondary"><i data-lucide="arrow-left-right"></i> Decode</button>
+                                </div>
+                            </div>
+                            <div class="codec-panel">
+                                <div class="form-group">
+                                    <label for="codec-output">Output Data</label>
+                                    <div class="relative-container">
+                                        <textarea id="codec-output" readonly placeholder="Result will appear here..." rows="6"></textarea>
+                                        <button class="btn-icon copy-btn floating-copy" data-target="codec-output"><i data-lucide="copy"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Subnet Calculator Section -->
+                <section id="subnet-calc" class="tab-content">
+                    <div class="grid-two-cols">
+                        <div class="card">
+                            <div class="card-header">
+                                <i data-lucide="network" class="card-header-icon"></i>
+                                <h2>Network Settings</h2>
+                            </div>
+                            <div class="form-group">
+                                <label for="ip-address">IP Address</label>
+                                <input type="text" id="ip-address" placeholder="e.g. 192.168.1.1" value="192.168.1.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="cidr-select">Subnet Mask (CIDR)</label>
+                                <select id="cidr-select" class="custom-select">
+                                    <!-- Options filled dynamically -->
+                                </select>
+                            </div>
+                            <button id="calculate-subnet" class="btn btn-primary">
+                                <i data-lucide="calculator"></i> Calculate Range
+                            </button>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <i data-lucide="list" class="card-header-icon"></i>
+                                <h2>Subnet Details</h2>
+                            </div>
+                            
+                            <table class="data-table">
+                                <tbody>
+                                    <tr>
+                                        <td>Netmask</td>
+                                        <td id="subnet-mask" class="mono">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Network Address</td>
+                                        <td id="net-address" class="mono">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Broadcast Address</td>
+                                        <td id="broadcast-address" class="mono">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Usable IP Range</td>
+                                        <td id="usable-range" class="mono">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total Usable Hosts</td>
+                                        <td id="total-hosts" class="mono">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Cryptography Section -->
+                <section id="encrypter" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <i data-lucide="lock" class="card-header-icon"></i>
+                            <h2>Cryptography Suite</h2>
+                        </div>
+                        
+                        <!-- Toggle switch for Crypto Tools -->
+                        <div class="toggle-container">
+                            <button id="crypto-mode-symmetric" class="toggle-btn active">Symmetric Ciphers</button>
+                            <button id="crypto-mode-dh" class="toggle-btn">Diffie-Hellman Key Exchange</button>
+                        </div>
+
+                        <!-- Symmetric Ciphers panel -->
+                        <div id="crypto-symmetric-container">
+                            <div class="crypt-grid">
+                                <div class="crypt-input-panel">
+                                    <div class="form-group">
+                                        <label for="crypt-algo">Encryption Algorithm</label>
+                                        <select id="crypt-algo" class="custom-select">
+                                            <option value="aes-gcm">AES-GCM (256-bit / Secure)</option>
+                                            <option value="3des">Triple DES (3DES / Legacy)</option>
+                                            <option value="des">DES (56-bit / Obsolete)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="crypt-text">Plaintext / Ciphertext</label>
+                                        <textarea id="crypt-text" placeholder="Enter text to encrypt or decrypt..." rows="5"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="crypt-key">Secret Key (Password)</label>
+                                        <div class="password-input-wrapper">
+                                            <input type="password" id="crypt-key" placeholder="Enter secret key...">
+                                            <button class="btn-icon" id="toggle-key-visibility"><i data-lucide="eye"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="crypt-btn-row">
+                                        <button id="encrypt-btn" class="btn btn-primary"><i data-lucide="shield"></i> Encrypt</button>
+                                        <button id="decrypt-btn" class="btn btn-secondary"><i data-lucide="shield-off"></i> Decrypt</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="crypt-output-panel">
+                                    <div class="form-group">
+                                        <label for="crypt-result">Result Output</label>
+                                        <div class="relative-container">
+                                            <textarea id="crypt-result" readonly placeholder="Output will be displayed here..." rows="12"></textarea>
+                                            <button class="btn-icon copy-btn floating-copy" data-target="crypt-result"><i data-lucide="copy"></i></button>
+                                        </div>
+                                    </div>
+                                    <div id="crypt-warning-box" class="warning-badge hidden">
+                                        <i data-lucide="alert-triangle"></i>
+                                        <span>DES/3DES are legacy block ciphers. Use AES-GCM for secure data transport.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Diffie-Hellman simulator panel -->
+                        <div id="crypto-dh-container" class="hidden">
+                            <!-- Parameters Setup -->
+                            <div class="dh-params-card">
+                                <h3>Common Parameters</h3>
+                                <div class="dh-params-row">
+                                    <div class="form-group">
+                                        <label for="dh-p">Prime Modulus (p)</label>
+                                        <input type="text" id="dh-p" class="mono" value="9999999900000001">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dh-g">Generator (g)</label>
+                                        <input type="text" id="dh-g" class="mono" value="2">
+                                    </div>
+                                    <button class="btn btn-secondary" id="btn-dh-generate-params">
+                                        <i data-lucide="sparkles"></i> Generate New
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="grid-two-cols" style="margin-top: 20px;">
+                                <!-- Alice Panel -->
+                                <div class="card bg-elevated">
+                                    <div class="card-header">
+                                        <i data-lucide="user" class="card-header-icon"></i>
+                                        <h3>Alice</h3>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dh-alice-priv">Private Key (a)</label>
+                                        <input type="text" id="dh-alice-priv" class="mono" placeholder="Enter private key e.g. 12345">
+                                    </div>
+                                    <button class="btn btn-secondary btn-sm" id="btn-dh-alice-pub">
+                                        Calculate Public Key (A)
+                                    </button>
+                                    <div class="form-group" style="margin-top: 15px;">
+                                        <label>Alice's Public Key (A = g^a mod p)</label>
+                                        <div class="copyable-output">
+                                            <input type="text" id="dh-alice-pub-val" readonly placeholder="Waiting for computation...">
+                                            <button class="btn-icon copy-btn" data-target="dh-alice-pub-val"><i data-lucide="copy"></i></button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="dh-exchange-box">
+                                        <div class="form-group">
+                                            <label for="dh-alice-bob-pub">Bob's Received Public Key (B)</label>
+                                            <input type="text" id="dh-alice-bob-pub" class="mono" placeholder="Paste Bob's public key here">
+                                        </div>
+                                        <button class="btn btn-primary btn-sm" id="btn-dh-alice-secret">
+                                            Compute Shared Secret
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Bob Panel -->
+                                <div class="card bg-elevated">
+                                    <div class="card-header">
+                                        <i data-lucide="user" class="card-header-icon"></i>
+                                        <h3>Bob</h3>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dh-bob-priv">Private Key (b)</label>
+                                        <input type="text" id="dh-bob-priv" class="mono" placeholder="Enter private key e.g. 67890">
+                                    </div>
+                                    <button class="btn btn-secondary btn-sm" id="btn-dh-bob-pub">
+                                        Calculate Public Key (B)
+                                    </button>
+                                    <div class="form-group" style="margin-top: 15px;">
+                                        <label>Bob's Public Key (B = g^b mod p)</label>
+                                        <div class="copyable-output">
+                                            <input type="text" id="dh-bob-pub-val" readonly placeholder="Waiting for computation...">
+                                            <button class="btn-icon copy-btn" data-target="dh-bob-pub-val"><i data-lucide="copy"></i></button>
+                                        </div>
+                                    </div>
+
+                                    <div class="dh-exchange-box">
+                                        <div class="form-group">
+                                            <label for="dh-bob-alice-pub">Alice's Received Public Key (A)</label>
+                                            <input type="text" id="dh-bob-alice-pub" class="mono" placeholder="Paste Alice's public key here">
+                                        </div>
+                                        <button class="btn btn-primary btn-sm" id="btn-dh-bob-secret">
+                                            Compute Shared Secret
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Shared Secret Match Notification -->
+                            <div class="dh-shared-secret-match hidden" id="dh-match-banner">
+                                <div class="dh-match-header">
+                                    <i data-lucide="shield-check" class="match-icon"></i>
+                                    <h4>Shared Secret Established Successfully!</h4>
+                                </div>
+                                <div class="dh-match-details">
+                                    <div class="dh-secret-value-display">
+                                        <span>Shared Key (S):</span>
+                                        <strong id="dh-shared-key-val" class="mono">-</strong>
+                                    </div>
+                                    <p class="dh-match-desc">Both Alice and Bob have derived the exact same shared key without transmitting their private keys over the wire.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Link Shortener Section -->
+                <section id="link-shaper" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <i data-lucide="link-2" class="card-header-icon"></i>
+                            <h2>URL Shortener & Redirector</h2>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="link-input">Long URL / Link</label>
+                            <input type="text" id="link-input" placeholder="Enter long URL e.g. https://example.com/very-long-directory-path-to-file">
+                        </div>
+
+                        <div class="grid-two-cols">
+                            <!-- Link Operations Panel -->
+                            <div class="card bg-elevated" style="margin-bottom: 0;">
+                                <div class="card-header">
+                                    <i data-lucide="settings" class="card-header-icon"></i>
+                                    <h3>Shortening Options</h3>
+                                </div>
+                                <div class="form-group">
+                                    <label>Shortener Method</label>
+                                    <div class="radio-group" style="display:flex; flex-direction:column; gap:10px; margin-top:5px;">
+                                        <label class="radio-container" style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-main); cursor:pointer;">
+                                            <input type="radio" name="shortener-method" id="method-online" checked style="accent-color:var(--primary-color);">
+                                            <span>TinyURL (Online API / Real Short Link)</span>
+                                        </label>
+                                        <label class="radio-container" style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-main); cursor:pointer;">
+                                            <input type="radio" name="shortener-method" id="method-offline" style="accent-color:var(--primary-color);">
+                                            <span>HTML Redirect File (Offline Redirect Package)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <button id="shape-link-btn" class="btn btn-primary" style="margin-top: 15px; width: 100%;">
+                                    <i data-lucide="link"></i> Shorten URL
+                                </button>
+                            </div>
+
+                            <!-- Link Results Panel -->
+                            <div class="card bg-elevated" style="margin-bottom: 0;">
+                                <div class="card-header">
+                                    <i data-lucide="check-circle" class="card-header-icon"></i>
+                                    <h3>Shortened Outputs</h3>
+                                </div>
+                                <div class="form-group">
+                                    <label>Result Short Link</label>
+                                    <div class="copyable-output">
+                                        <input type="text" id="shaped-link-output" readonly placeholder="Shortened link will appear here...">
+                                        <button class="btn-icon copy-btn" data-target="shaped-link-output"><i data-lucide="copy"></i></button>
+                                    </div>
+                                </div>
+                                <div id="redirect-download-container" class="hidden" style="margin-top: 15px;">
+                                    <button id="download-redirect-btn" class="btn btn-secondary btn-sm" style="width: 100%;">
+                                        <i data-lucide="download"></i> Download Redirect File (.html)
+                                    </button>
+                                </div>
+                                <div id="qr-code-container" class="hidden" style="margin-top: 15px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                                    <label style="align-self: flex-start;">Offline QR Code</label>
+                                    <canvas id="qr-canvas" style="background-color: white; padding: 10px; border-radius: 4px;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- About Me Section -->
+                <section id="about-me" class="tab-content">
+                    <div class="grid-two-cols">
+                        <!-- Profile Card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <i data-lucide="user" class="card-header-icon"></i>
+                                <h2>Developer Profile</h2>
+                            </div>
+                            <div class="profile-info-container">
+                                <div class="profile-avatar-wrapper">
+                                    <img src="profile_avatar.jpg" alt="Mohammad Hussain Alzaghameem" class="profile-avatar-img">
+                                </div>
+                                <div class="profile-details-list">
+                                    <div class="profile-detail-item">
+                                        <span class="p-label">Name</span>
+                                        <span class="p-value">Mohammad Hussain Alzaghameem</span>
+                                    </div>
+                                    <div class="profile-detail-item">
+                                        <span class="p-label">Email</span>
+                                        <span class="p-value"><a href="mailto:mohzag615@gmail.com" class="p-link">mohzag615@gmail.com</a></span>
+                                    </div>
+                                    <div class="profile-detail-item">
+                                        <span class="p-label">Phone</span>
+                                        <span class="p-value"><a href="tel:+962799919621" class="p-link">+962799919621</a></span>
+                                    </div>
+                                    <div class="profile-detail-item">
+                                        <span class="p-label">LinkedIn</span>
+                                        <span class="p-value"><a href="https://www.linkedin.com/in/mohammad-zaghameem-0b01511b6/" target="_blank" class="p-link">View Profile</a></span>
+                                    </div>
+                                    <div class="profile-detail-item">
+                                        <span class="p-label">Education</span>
+                                        <span class="p-value">Tafilah Technical University (TTU)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Acknowledgement Card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <i data-lucide="award" class="card-header-icon"></i>
+                                <h2>Gratitude & Acknowledgements</h2>
+                            </div>
+                            <div class="acknowledgement-text">
+                                <div class="acknowledgement-block">
+                                    <h3 class="ack-subtitle">Special Thanks to Dr. Yazan Alsariera</h3>
+                                    <p>I would like to express my deepest gratitude to <strong>Dr. Yazan Alsariera</strong>. Thank you for your endless guidance, support, and mentorship. You gave me the passion for cybersecurity, mapped out the path for my skills, and provided the roadmap that shaped who I am today.</p>
+                                </div>
+                                
+                                <div class="acknowledgement-block" style="margin-top: 20px;">
+                                    <h3 class="ack-subtitle">Acknowledgement to Tafilah Technical University</h3>
+                                    <p>I am proud to be a graduate of <strong>Tafilah Technical University</strong>. I would like to extend my heartfelt thanks to every doctor, professor, and instructor at the university who contributed to my academic growth, inspired my curiosity, and supported me throughout my educational journey.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Script imports -->
+    <script src="crypto-js.js"></script>
+    <script src="qrious.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
