@@ -1,90 +1,147 @@
-# MHZ Tools - Cybersecurity & Cryptography Utility Suite
+# MHZ Tools 2.0 — Comprehensive Security, Data Analysis & Digital Forensics Suite
 
-MHZ Tools is a single-window desktop application built using HTML, CSS, JavaScript, and Electron. It features a modern dark/light green cybersecurity dashboard with glowing elements, transitions, and offline-first tools designed for security practitioners and developers.
+![MHZ Tools 2.0](https://img.shields.io/badge/MHZ_Tools-v2.0.0-10b981.svg?style=for-the-badge&logo=shield)
+![Platform](https://img.shields.io/badge/Platform-Windows_x64_%7C_ia32-0284c7.svg?style=for-the-badge&logo=windows)
+![Architecture](https://img.shields.io/badge/Client--Side-Zero_Data_Leakage-10b981.svg?style=for-the-badge)
+![License](https://img.shields.io/badge/License-ISC-64748b.svg?style=for-the-badge)
 
----
-
-## Core Features
-
-### 1. Hash Calculator
-- **Drag-and-Drop Integrity Checking**: Traverse files and entire folders recursively.
-- **Parallel Multi-Hash Calculations**: Computes and displays checksums for **MD5**, **SHA-1**, **SHA-256**, and **SHA-512** concurrently.
-- **Detailed Row Expansions**: Click on any file row to expand a complete hash results grid with individual copy-to-clipboard buttons.
-
-### 2. Password Generator & Analyzer
-- **Customizable Criteria**: Toggle lengths, upper/lower cases, numbers, and symbols.
-- **Brute-Force Strength Meter**: Measures Shannon entropy in bits and calculates estimated crack times.
-
-### 3. Encoder / Decoder
-- **Translation Options**: Instantly translate text payloads between **Base64**, **Hexadecimal**, and **URL encoding** modes.
-
-### 4. IP Subnet Calculator
-- **IPv4 Address Planning**: Select CIDR masks (from `/32` down to `/1`) to compute netmasks, network addresses, broadcast boundaries, usable ranges, and host counts.
-
-### 5. Cryptography Suite
-- **Symmetric Ciphers**: Support for **AES-GCM (256-bit)**, **Triple DES (3DES)**, and legacy **DES (56-bit)** with standard warning alerts.
-- **Diffie-Hellman Key Exchange Simulator**: Interactive walkthrough explaining key exchange math ($g^x \bmod p$) with high-precision `BigInt` calculations. Includes presets for moduli primes and a shared secret validation banner.
-
-### 6. URL Shortener & Redirector
-- **TinyURL Integration**: Shortens URLs online using public TinyURL APIs.
-- **Offline HTML Redirector**: Compiles local redirect packages (`.html` files) featuring secure redirect layouts.
-- **QR Code Generator**: Generates scannable QR Code graphics offline.
-
-### 7. Dual Theme Toggling
-- **Theme Switcher**: Switch between the default **Dark Green Theme** and a high-contrast **Light Green Theme**.
-- **State Persistence**: Saves user preferences using local browser storage.
+**MHZ Tools 2.0** is an all-in-one, offline-first desktop application designed for cybersecurity researchers, malware analysts, data scientists, digital forensics investigators, and developers. Built with high performance and privacy in mind, all operations are executed entirely on the local machine with zero external telemetry.
 
 ---
 
-## Technology Stack
-- **Framework**: Electron (with secure `contextIsolation` and `sandbox` configurations)
-- **GUI Engine**: HTML5, Vanilla CSS3 (Custom design systems), Vanilla ES6 JavaScript
-- **Cryptographic Libraries**: Web Crypto APIs (PBKDF2/AES-GCM), `crypto-js` (DES/3DES)
-- **QR Engine**: `qrious.js`
+## 🌟 What's New in Version 2.0
+
+- 🔬 **Digital Forensics Suite**: Deep EXIF metadata extraction with photo capture dates, camera specs, smartphone identification (iPhone, Pixel, Galaxy, DSLR, Drone), embedded GPS pinpointing with Google Maps integration, and an interactive byte-level Hex Inspector.
+- ⚙️ **C/C++ 64-Bit to 32-Bit Code Transformer**: Offline source-level code transformation engine with integrated MinGW-w64 32-bit GCC compiler support for generating Win32 executables (`.exe`), assembly code (`.s`), and syntax verification.
+- 🦠 **Malware Static Analysis Suite**: Windows PE binary & section entropy inspector, document & PDF static payload analyzer (streams/VBA macros), and a 70-vendor VirusTotal threat intelligence matrix.
+- 📊 **Enhanced Data Analysis Suite**: XLSX/CSV dataset ingestion, automatic missing value imputation, Chi-Square independence & goodness of fit tests, OLS regression, and high-resolution light-mode Matplotlib / Plotly popup visualization charts with export tools.
+- ⚡ **Native Electron Save Dialogs**: Save transformed C/C++, assembly, executables, charts, and forensic reports with native OS file selection prompts.
 
 ---
 
-## Local Development & Installation
+## 🚀 Core Module Breakdown
+
+### 1. 🔐 Encryption & Security Suite
+- **Multi-Hash Integrity Calculator**: Drag-and-drop file and directory scanner with concurrent checksum generation for **MD5**, **SHA-1**, **SHA-256**, and **SHA-512**.
+- **Hash Comparator & Verifier**: Compare two inputs side-by-side or verify files against known security threat hashes.
+- **Password Generator & Entropy Meter**: Generate cryptographically secure passwords with custom character sets and real-time Shannon entropy strength measurement.
+- **Payload Encoder / Decoder**: Real-time translation between **Base64**, **Hexadecimal**, and **URL-encoded** strings.
+- **IPv4 Subnet Planner**: CIDR mask calculations (`/32` to `/1`), subnet boundaries, broadcast addresses, usable IP host ranges, and wildcard masks.
+- **Symmetric Cryptography Engine**: High-security **AES-GCM (256-bit)**, **Triple DES (3DES)**, and legacy **DES (56-bit)** encryption and decryption.
+- **Diffie-Hellman Key Exchange Simulator**: Step-by-step interactive cryptographic mathematical exchange ($g^x \bmod p$) with `BigInt` precision and secret key validation.
+- **URL Redirection & QR Code Generator**: Offline secure HTML redirect package generator and QR code matrix generator.
+
+---
+
+### 2. 📊 Data Analysis & Visualization Suite
+- **Dataset Ingestion**: Native parser for **Excel (`.xlsx`, `.xls`)** and **CSV (`.csv`)** files with dynamic type detection.
+- **Data Cleaning & Imputation**: Fill missing numeric and categorical cells using Mean, Median, Mode, or custom values.
+- **Summary & Advanced Statistics**: Mean, median, mode, standard deviation, variance, skewness, kurtosis, and quartiles.
+- **Hypothesis Testing (Chi-Square Engine)**:
+  - Chi-Square Test of Independence (Contingency Matrix, Degrees of Freedom, P-Value, Cramér's V).
+  - Chi-Square Goodness of Fit Test with observed vs expected distributions.
+- **OLS Linear Regression**: Best-fit line slope, intercept, $R^2$ coefficient of determination, correlation coefficient ($r$), and scatter plot overlays.
+- **Interactive Light-Theme Popup Charts**: High-contrast Matplotlib / Plotly pop-up charts with navigation toolbars, panning, zooming, and high-res PNG download.
+
+---
+
+### 3. 🦠 Malware Static Analysis Suite
+- **Malware File Hashing & IOC Matcher**: Rapid MD5/SHA-256 hashing with threat IOC lookup.
+- **Windows PE Binary & Section Entropy Inspector**: Decodes DOS header, PE signature, architecture (x86/x64), subsystem, compilation timestamp, and Shannon entropy per section (`.text`, `.data`, `.rdata`, `.rsrc`) to detect packed or encrypted malware samples.
+- **Document & PDF Static Analyst**: Inspects embedded PDF streams (`/JavaScript`, `/Launch`, `/EmbeddedFiles`, `/OpenAction`) and Microsoft Office VBA macros without executing files.
+- **VirusTotal Threat Intelligence Center**: 70-vendor detection matrix simulation, threat classifications, risk scores, and MITRE ATT&CK TTP mapping.
+
+---
+
+### 4. ⚙️ C/C++ 64-Bit to 32-Bit Architecture Transformer
+- **Automated Source Transformation**: Real-time refactoring of 64-bit data types (`uint64_t`, `int64_t`, `size_t`, `uintptr_t`) to Win32/x86 equivalents (`uint32_t`, `int32_t`, `DWORD`, `ULONG_PTR`).
+- **Bitmask & Pointer Width Adjustments**: Converts 64-bit bitmasks (`0xFFFFFFFFFFFFFFFFULL`, `0x8000000000000000ULL`) to 32-bit representations.
+- **Offline GCC MinGW Toolchain Integration**:
+  - Compiles 32-bit Win32 executables (`gcc -m32 -O2`).
+  - Generates 32-bit x86 assembly source files (`gcc -m32 -S`).
+  - Runs instant syntax validation checks (`gcc -m32 -fsyntax-only`).
+- **Interactive Transformation Audit**: Line-by-line diff highlighting and refactoring change logs.
+
+---
+
+### 5. 🔬 Digital Forensics Suite
+- **EXIF & Media Metadata Extractor**:
+  - Extracts camera make, model, lens profile, focal length, exposure time, F-number, ISO speed ratings, and color space.
+  - Formats **Photo Capture Date & Time** (`DateTimeOriginal`, `DateTimeDigitized`, `xmp:CreateDate`).
+  - Automatically identifies shooting devices: **Apple iPhone (iOS Camera / Photos Render)**, **Google Pixel**, **Samsung Galaxy**, **DJI Drones**, and **DSLR / Mirrorless cameras**.
+  - Decodes embedded **GPS Pinpoint Coordinates** (Latitude & Longitude) with direct links to **Google Maps** and **OpenStreetMap**.
+  - Displays **Pixel Resolution & Density Breakdown** (Width $\times$ Height in pixels, total sensor Megapixels, aspect ratio, and DPI density).
+- **Interactive Forensic Hex Inspector**:
+  - Side-by-side hexadecimal offset, 16-byte raw hex representation, and decoded ASCII stream.
+  - Multi-page pagination for fast inspection of large binary files.
+  - Real-time search filter across hex bytes and text strings.
+
+---
+
+## 🛠️ Technology Stack
+
+- **Desktop Framework**: Electron 22.x (configured with strict `contextIsolation`, `preload` scripts, and sandboxed architecture)
+- **Frontend Core**: Vanilla HTML5, Vanilla CSS3 (Custom responsive design system with Dark/Light cybersecurity palettes), Vanilla ES6+ JavaScript
+- **Compiler Integration**: Portable GCC MinGW-w64 toolchain (32-bit & 64-bit cross-compilation)
+- **Data & Math Engines**: `crypto-js`, `qrious`, `xlsx`, `plotly.js`, Python 3 scientific backend (`numpy`, `pandas`, `scipy`, `matplotlib`, `statsmodels`)
+- **Packaging**: Electron Builder (NSIS Windows Installer & Single-File Portable Executables)
+
+---
+
+## 💻 Installation & Local Development
 
 ### Prerequisites
 - Node.js (v16.0.0 or higher recommended)
-- npm
+- npm (v8.0.0 or higher)
+- Python 3.8+ (Optional, for advanced statistics engine)
 
-### 1. Clone and Install Dependencies
+### 1. Clone the Repository
 ```bash
-# Clone the repository
-git clone https://github.com/YOUR_USERNAME/mhz-tools.git
-cd mhz-tools
+git clone https://github.com/mohammadzag/MHZTools.git
+cd MHZTools
+```
 
-# Install node dependencies
+### 2. Install Dependencies
+```bash
 npm install
 ```
 
-### 2. Run the Application locally
+### 3. Run in Development Mode
 ```bash
 npm start
 ```
 
-### 3. Build standalone executable
-To build a portable, single-file Windows executable (.exe) inside the `dist/` directory:
+### 4. Build Production Executables
+To build both the **Windows Setup Installer (`.exe`)** and the **Standalone Portable Executable (`.exe`)**:
 ```bash
 npm run package
 ```
+Output binaries will be generated inside the `dist/` directory:
+- `dist/MHZTools Setup 2.0.0.exe` (NSIS Installer)
+- `dist/MHZTools 2.0.0.exe` (Single-file Portable)
 
 ---
 
-## Dedicated Acknowledgements
+## 👨‍💻 Developer Profile
+
+- **Author**: Mohammad Hussain Alzaghameem
+- **Education**: Tafilah Technical University (TTU)
+- **Portfolio**: [mohammadzag.github.io/Portofolio](https://mohammadzag.github.io/Portofolio/)
+- **Email**: [mohzag615@gmail.com](mailto:mohzag615@gmail.com)
+- **LinkedIn**: [Mohammad Alzaghameem](https://www.linkedin.com/in/mohammad-zaghameem-0b01511b6/)
+- **Phone**: [+962799919621](tel:+962799919621)
+
+---
+
+## 🎓 Dedicated Acknowledgements
 
 ### Special Thanks to Dr. Yazan Alsariera
-I would like to express my deepest gratitude to **Dr. Yazan Alsariera** for his endless guidance, support, and mentorship. Thank you for igniting my passion for cybersecurity, mapping out the roadmap to expand my skills, and providing the direction that shaped who I am today.
+I would like to express my deepest gratitude to **Dr. Yazan Alsariera** for his exceptional mentorship, encouragement, and guidance throughout my academic and cybersecurity journey. His passion and insights have been instrumental in shaping this project and my professional career.
 
 ### Acknowledgement to Tafilah Technical University
-I am proud to be a graduate of **Tafilah Technical University (TTU)**. I extend my sincere thanks to every professor, doctor, and instructor at the university who contributed to my academic growth and supported my education.
+I am proud to be a graduate of **Tafilah Technical University (TTU)**. I extend my sincere appreciation to the distinguished faculty, professors, and doctors who supported my education and fueled my passion for computer science and cybersecurity.
 
 ---
 
-## Author
-- **Developer**: Mohammad Hussain Alzaghameem
-- **Email**: [mohzag615@gmail.com](mailto:mohzag615@gmail.com)
-- **LinkedIn**: [Mohammad Zaghameem](https://www.linkedin.com/in/mohammad-zaghameem-0b01511b6/)
-- **Phone**: [+962799919621](tel:+962799919621)
+## 📜 License
+This project is licensed under the **ISC License**.

@@ -9,8 +9,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Icons (Lucide Icons via CDN) -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Icons (Local Bundled Lucide Icons) -->
+    <script src="lucide.min.js"></script>
+    <script>
+        if (typeof window.lucide === 'undefined') {
+            window.lucide = { createIcons: function() {} };
+        }
+    </script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -25,30 +30,153 @@
             </div>
             
             <nav class="nav-menu">
-                <button class="nav-item active" data-tab="hash-calc">
-                    <i data-lucide="hash"></i>
-                    <span>Hash Calculator</span>
+                <!-- Welcome Home Button -->
+                <button class="nav-item active" data-tab="welcome">
+                    <i data-lucide="home"></i>
+                    <span>Welcome</span>
                 </button>
-                <button class="nav-item" data-tab="password-gen">
-                    <i data-lucide="key-round"></i>
-                    <span>Password Gen</span>
-                </button>
-                <button class="nav-item" data-tab="encoder-decoder">
-                    <i data-lucide="binary"></i>
-                    <span>Encoder/Decoder</span>
-                </button>
-                <button class="nav-item" data-tab="subnet-calc">
-                    <i data-lucide="network"></i>
-                    <span>Subnet Calc</span>
-                </button>
-                <button class="nav-item" data-tab="encrypter">
-                    <i data-lucide="lock"></i>
-                    <span>Cryptography</span>
-                </button>
-                <button class="nav-item" data-tab="link-shaper">
-                    <i data-lucide="link-2"></i>
-                    <span>Link Shortener</span>
-                </button>
+
+                <!-- Collapsible Encryption & Security Group -->
+                <div class="nav-group collapsed" id="group-encryption">
+                    <button class="nav-group-header" id="header-encryption">
+                        <span class="nav-group-header-left">
+                            <i data-lucide="shield"></i>
+                            <span>Encryption Section</span>
+                        </span>
+                        <i data-lucide="chevron-down" class="group-arrow"></i>
+                    </button>
+                    <div class="nav-group-items">
+                        <button class="nav-item active" data-tab="hash-calc">
+                            <i data-lucide="hash"></i>
+                            <span>Hash Calculator</span>
+                        </button>
+                        <button class="nav-item" data-tab="hash-compare">
+                            <i data-lucide="git-compare"></i>
+                            <span>Hash Comparator</span>
+                        </button>
+                        <button class="nav-item" data-tab="password-gen">
+                            <i data-lucide="key-round"></i>
+                            <span>Password Gen</span>
+                        </button>
+                        <button class="nav-item" data-tab="encoder-decoder">
+                            <i data-lucide="binary"></i>
+                            <span>Encoder/Decoder</span>
+                        </button>
+                        <button class="nav-item" data-tab="subnet-calc">
+                            <i data-lucide="network"></i>
+                            <span>Subnet Calc</span>
+                        </button>
+                        <button class="nav-item" data-tab="encrypter">
+                            <i data-lucide="lock"></i>
+                            <span>Cryptography</span>
+                        </button>
+                        <button class="nav-item" data-tab="link-shaper">
+                            <i data-lucide="link-2"></i>
+                            <span>Link Shortener</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Collapsible Data Analysis Group -->
+                <div class="nav-group collapsed" id="group-analysis">
+                    <button class="nav-group-header" id="header-analysis">
+                        <span class="nav-group-header-left">
+                            <i data-lucide="bar-chart-2"></i>
+                            <span>Data Analysis</span>
+                        </span>
+                        <i data-lucide="chevron-down" class="group-arrow"></i>
+                    </button>
+                    <div class="nav-group-items">
+                        <button class="nav-item" data-tab="analysis-import">
+                            <i data-lucide="upload-cloud"></i>
+                            <span>Import Dataset</span>
+                        </button>
+                        <button class="nav-item" data-tab="analysis-preview">
+                            <i data-lucide="eye"></i>
+                            <span>Data Explorer</span>
+                        </button>
+                        <button class="nav-item" data-tab="analysis-cleaning">
+                            <i data-lucide="brush"></i>
+                            <span>Data Cleaning</span>
+                        </button>
+                        <button class="nav-item" data-tab="analysis-stats">
+                            <i data-lucide="calculator"></i>
+                            <span>Summary Stats</span>
+                        </button>
+                        <button class="nav-item" data-tab="analysis-chi">
+                            <i data-lucide="scale"></i>
+                            <span>Chi-Square Test</span>
+                        </button>
+                        <button class="nav-item" data-tab="analysis-charts">
+                            <i data-lucide="line-chart"></i>
+                            <span>Visualisation Studio</span>
+                        </button>
+                        <button class="nav-item" data-tab="analysis-export">
+                            <i data-lucide="download"></i>
+                            <span>Export Results</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Collapsible Static Malware Analysis Group -->
+                <div class="nav-group collapsed" id="group-malware">
+                    <button class="nav-group-header" id="header-malware">
+                        <span class="nav-group-header-left">
+                            <i data-lucide="bug"></i>
+                            <span>Malware Analysis</span>
+                        </span>
+                        <i data-lucide="chevron-down" class="group-arrow"></i>
+                    </button>
+                    <div class="nav-group-items">
+                        <button class="nav-item" data-tab="malware-hash-calc">
+                            <i data-lucide="hash"></i>
+                            <span>Malware Hash Calc</span>
+                        </button>
+                        <button class="nav-item" data-tab="malware-hash-compare">
+                            <i data-lucide="git-compare"></i>
+                            <span>Threat Hash Verifier</span>
+                        </button>
+                        <button class="nav-item" data-tab="malware-pe-inspector">
+                            <i data-lucide="file-code-2"></i>
+                            <span>PE Binary Inspector</span>
+                        </button>
+                        <button class="nav-item" data-tab="malware-doc-inspector">
+                            <i data-lucide="file-search"></i>
+                            <span>Doc &amp; PDF Analyst</span>
+                        </button>
+                        <button class="nav-item" data-tab="malware-virustotal-clone">
+                            <i data-lucide="shield-check"></i>
+                            <span>VirusTotal Threat Center</span>
+                        </button>
+                        <button class="nav-item" data-tab="cpp-arch-converter">
+                            <i data-lucide="code-2"></i>
+                            <span>C/C++ 64bit to 32bit</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Collapsible Digital Forensics Group -->
+                <div class="nav-group collapsed" id="group-forensics">
+                    <button class="nav-group-header" id="header-forensics">
+                        <span class="nav-group-header-left">
+                            <i data-lucide="microscope"></i>
+                            <span>Digital Forensics</span>
+                        </span>
+                        <i data-lucide="chevron-down" class="group-arrow"></i>
+                    </button>
+                    <div class="nav-group-items">
+                        <button class="nav-item" data-tab="forensics-exif-metadata">
+                            <i data-lucide="image"></i>
+                            <span>EXIF &amp; Media Metadata</span>
+                        </button>
+                        <button class="nav-item" data-tab="forensics-hex-carver">
+                            <i data-lucide="terminal"></i>
+                            <span>Interactive Hex Inspector</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Standalone About Me Section -->
                 <button class="nav-item" data-tab="about-me">
                     <i data-lucide="info"></i>
                     <span>About Developer</span>
@@ -67,8 +195,8 @@
         <main class="content-area">
             <header class="content-header">
                 <div class="header-title">
-                    <h1 id="page-title">Hash Calculator</h1>
-                    <p id="page-subtitle">Generate cryptographic checksums for data integrity verification.</p>
+                    <h1 id="page-title">Welcome</h1>
+                    <p id="page-subtitle">Choose a tool from the sidebar to get started.</p>
                 </div>
                 <div class="header-actions">
                     <button class="btn-icon theme-toggle-btn" id="theme-toggle" title="Toggle Light/Dark Theme">
@@ -79,8 +207,54 @@
             </header>
 
             <div class="scroll-container">
+                <!-- Welcome Page -->
+                <section id="welcome" class="tab-content active">
+                    <div class="welcome-page">
+                        <div class="welcome-hero">
+                            <div class="welcome-logo-wrap">
+                                <i data-lucide="shield-alert" class="welcome-logo-icon"></i>
+                            </div>
+                            <h1 class="welcome-title">MHZ <span>TOOLS</span></h1>
+                            <p class="welcome-tagline">A comprehensive, client-side security &amp; data analysis utility suite for professionals.</p>
+                        </div>
+                        <div class="welcome-cards">
+                            <div class="welcome-card" onclick="document.getElementById('header-encryption').click(); document.querySelector('.nav-item[data-tab=\'hash-calc\']').click();">
+                                <div class="welcome-card-icon"><i data-lucide="shield"></i></div>
+                                <h3>Encryption &amp; Security</h3>
+                                <p>Hash calculations, password generation, subnet planning, encoding, and cryptography tools.</p>
+                                <span class="welcome-card-badge">7 Tools</span>
+                            </div>
+                            <div class="welcome-card" onclick="document.getElementById('header-analysis').click(); document.querySelector('.nav-item[data-tab=\'analysis-import\']').click();">
+                                <div class="welcome-card-icon"><i data-lucide="bar-chart-2"></i></div>
+                                <h3>Data Analysis</h3>
+                                <p>Import datasets, clean data, generate summary statistics, run Chi-Square tests, and create visualisations.</p>
+                                <span class="welcome-card-badge">7 Tools</span>
+                            </div>
+                            <div class="welcome-card" onclick="document.getElementById('header-malware').click(); document.querySelector('.nav-item[data-tab=\'malware-hash-calc\']').click();">
+                                <div class="welcome-card-icon"><i data-lucide="bug"></i></div>
+                                <h3>Malware Analysis</h3>
+                                <p>Sample file hashing, threat IOC matching, PE binary &amp; section entropy inspector, PDF/office document analyst, and VirusTotal threat center.</p>
+                                <span class="welcome-card-badge">4 Tools</span>
+                            </div>
+                            <div class="welcome-card" onclick="document.getElementById('header-forensics').click(); document.querySelector('.nav-item[data-tab=\'forensics-exif-metadata\']').click();">
+                                <div class="welcome-card-icon"><i data-lucide="microscope"></i></div>
+                                <h3>Digital Forensics</h3>
+                                <p>EXIF metadata &amp; photo capture date, phone/camera model identification, GPS coordinates, and interactive hex byte inspector.</p>
+                                <span class="welcome-card-badge">2 Tools</span>
+                            </div>
+                            <div class="welcome-card" onclick="document.querySelector('.nav-item[data-tab=\'about-me\']').click();">
+                                <div class="welcome-card-icon"><i data-lucide="user"></i></div>
+                                <h3>About Developer</h3>
+                                <p>Professional background, academic history, and dedicated acknowledgements.</p>
+                                <span class="welcome-card-badge">Info</span>
+                            </div>
+                        </div>
+                        <p class="welcome-footer-note">All processing is done locally &mdash; no data leaves your machine.</p>
+                    </div>
+                </section>
+
                 <!-- Hash Calculator Section -->
-                <section id="hash-calc" class="tab-content active">
+                <section id="hash-calc" class="tab-content">
                     <div class="card">
                         <div class="card-header">
                             <i data-lucide="hash" class="card-header-icon"></i>
@@ -168,6 +342,248 @@
                                         </tbody>
                                     </table>
                                 </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Hash Comparator Section -->
+                <section id="hash-compare" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <i data-lucide="git-compare" class="card-header-icon"></i>
+                            <h2>Multi-Hash Compare & Verification Suite</h2>
+                        </div>
+
+                        <!-- Main Mode Switcher for comparator -->
+                        <div class="toggle-container">
+                            <button id="compare-mode-text" class="toggle-btn active">Text vs Text</button>
+                            <button id="compare-mode-file" class="toggle-btn">File vs File</button>
+                            <button id="compare-mode-verify" class="toggle-btn">Verify Hash (Pasted)</button>
+                        </div>
+
+                        <!-- Text vs Text Mode Container -->
+                        <div id="compare-text-container">
+                            <div class="grid-two-cols">
+                                <div class="form-group">
+                                    <label for="compare-text-a">Text A</label>
+                                    <textarea id="compare-text-a" placeholder="Enter first text to compare..." rows="5"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="compare-text-b">Text B</label>
+                                    <textarea id="compare-text-b" placeholder="Enter second text to compare..." rows="5"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Overall match status banner -->
+                            <div id="compare-text-status" class="compare-status-banner hidden">
+                                <!-- Filled by JS -->
+                            </div>
+
+                            <!-- Comparison table of hashes -->
+                            <div class="table-wrapper" style="margin-top: 20px;">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Algorithm</th>
+                                            <th>Hash Value (Text A)</th>
+                                            <th>Hash Value (Text B)</th>
+                                            <th style="width: 120px;">Match Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id="compare-text-row-md5">
+                                            <td>MD5</td>
+                                            <td id="comp-txt-a-md5" class="mono">-</td>
+                                            <td id="comp-txt-b-md5" class="mono">-</td>
+                                            <td id="comp-txt-match-md5" class="txt-center">-</td>
+                                        </tr>
+                                        <tr id="compare-text-row-sha1">
+                                            <td>SHA-1</td>
+                                            <td id="comp-txt-a-sha1" class="mono">-</td>
+                                            <td id="comp-txt-b-sha1" class="mono">-</td>
+                                            <td id="comp-txt-match-sha1" class="txt-center">-</td>
+                                        </tr>
+                                        <tr id="compare-text-row-sha256">
+                                            <td>SHA-256</td>
+                                            <td id="comp-txt-a-sha256" class="mono">-</td>
+                                            <td id="comp-txt-b-sha256" class="mono">-</td>
+                                            <td id="comp-txt-match-sha256" class="txt-center">-</td>
+                                        </tr>
+                                        <tr id="compare-text-row-sha512">
+                                            <td>SHA-512</td>
+                                            <td id="comp-txt-a-sha512" class="mono">-</td>
+                                            <td id="comp-txt-b-sha512" class="mono">-</td>
+                                            <td id="comp-txt-match-sha512" class="txt-center">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- File vs File Mode Container -->
+                        <div id="compare-file-container" class="hidden">
+                            <div class="grid-two-cols">
+                                <!-- File A Drop Zone -->
+                                <div class="drop-zone" id="drop-zone-comp-a" style="cursor: pointer;">
+                                    <i data-lucide="file" class="drop-zone-icon"></i>
+                                    <p class="drop-zone-text" id="comp-file-a-name">Drag & Drop File A</p>
+                                    <p class="drop-zone-subtext">or click to select</p>
+                                    <input type="file" id="comp-file-a-input" class="hidden">
+                                    
+                                    <!-- Progress representation -->
+                                    <div class="mini-progress-container hidden" id="comp-file-a-progress-container" style="width: 80%; margin-top: 10px;">
+                                        <div class="mini-progress-bar" id="comp-file-a-progress"></div>
+                                    </div>
+                                </div>
+
+                                <!-- File B Drop Zone -->
+                                <div class="drop-zone" id="drop-zone-comp-b" style="cursor: pointer;">
+                                    <i data-lucide="file" class="drop-zone-icon"></i>
+                                    <p class="drop-zone-text" id="comp-file-b-name">Drag & Drop File B</p>
+                                    <p class="drop-zone-subtext">or click to select</p>
+                                    <input type="file" id="comp-file-b-input" class="hidden">
+                                    
+                                    <!-- Progress representation -->
+                                    <div class="mini-progress-container hidden" id="comp-file-b-progress-container" style="width: 80%; margin-top: 10px;">
+                                        <div class="mini-progress-bar" id="comp-file-b-progress"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="compare-file-status" class="compare-status-banner hidden" style="margin-top: 20px;">
+                                <!-- Filled by JS -->
+                            </div>
+
+                            <!-- Comparison table of hashes -->
+                            <div class="table-wrapper" style="margin-top: 20px;">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Algorithm</th>
+                                            <th>Hash Value (File A)</th>
+                                            <th>Hash Value (File B)</th>
+                                            <th style="width: 120px;">Match Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id="compare-file-row-md5">
+                                            <td>MD5</td>
+                                            <td id="comp-file-a-md5" class="mono">-</td>
+                                            <td id="comp-file-b-md5" class="mono">-</td>
+                                            <td id="comp-file-match-md5" class="txt-center">-</td>
+                                        </tr>
+                                        <tr id="compare-file-row-sha1">
+                                            <td>SHA-1</td>
+                                            <td id="comp-file-a-sha1" class="mono">-</td>
+                                            <td id="comp-file-b-sha1" class="mono">-</td>
+                                            <td id="comp-file-match-sha1" class="txt-center">-</td>
+                                        </tr>
+                                        <tr id="compare-file-row-sha256">
+                                            <td>SHA-256</td>
+                                            <td id="comp-file-a-sha256" class="mono">-</td>
+                                            <td id="comp-file-b-sha256" class="mono">-</td>
+                                            <td id="comp-file-match-sha256" class="txt-center">-</td>
+                                        </tr>
+                                        <tr id="compare-file-row-sha512">
+                                            <td>SHA-512</td>
+                                            <td id="comp-file-a-sha512" class="mono">-</td>
+                                            <td id="comp-file-b-sha512" class="mono">-</td>
+                                            <td id="comp-file-match-sha512" class="txt-center">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Verify Hash (Pasted) Mode Container -->
+                        <div id="compare-verify-container" class="hidden">
+                            <div class="grid-two-cols">
+                                <div class="card bg-elevated" style="margin-bottom:0; padding: 20px;">
+                                    <div class="card-header" style="margin-bottom: 12px; padding-bottom: 8px;">
+                                        <i data-lucide="file-text" class="card-header-icon"></i>
+                                        <h3>1. Select Source Input</h3>
+                                    </div>
+                                    <div class="toggle-container" style="margin-top:0; margin-bottom: 15px;">
+                                        <button id="verify-src-mode-text" class="toggle-btn active">Text</button>
+                                        <button id="verify-src-mode-file" class="toggle-btn">File</button>
+                                    </div>
+
+                                    <div id="verify-src-text-wrapper">
+                                        <div class="form-group" style="margin-bottom: 0;">
+                                            <label for="verify-src-text">Source Text</label>
+                                            <textarea id="verify-src-text" placeholder="Enter source text to verify..." rows="5"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div id="verify-src-file-wrapper" class="hidden">
+                                        <div class="drop-zone" id="drop-zone-verify-file" style="cursor: pointer;">
+                                            <i data-lucide="file" class="drop-zone-icon"></i>
+                                            <p class="drop-zone-text" id="verify-file-name">Drag & Drop Source File</p>
+                                            <p class="drop-zone-subtext">or click to select</p>
+                                            <input type="file" id="verify-file-input" class="hidden">
+                                            
+                                            <!-- Progress representation -->
+                                            <div class="mini-progress-container hidden" id="verify-file-progress-container" style="width: 80%; margin-top: 10px;">
+                                                <div class="mini-progress-bar" id="verify-file-progress"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card bg-elevated" style="margin-bottom:0; padding: 20px;">
+                                    <div class="card-header" style="margin-bottom: 12px; padding-bottom: 8px;">
+                                        <i data-lucide="check-square" class="card-header-icon"></i>
+                                        <h3>2. Enter Target Hash</h3>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 12px;">
+                                        <label for="verify-target-hash">Known Target Checksum</label>
+                                        <input type="text" id="verify-target-hash" placeholder="Paste checksum (MD5/SHA1/SHA256/SHA512)..." style="font-size: 13px;">
+                                    </div>
+                                    <div id="verify-hash-detection" class="dim" style="font-size:12px; margin-bottom: 15px; min-height: 18px; color: var(--text-muted);">
+                                        Detected type: <strong>None</strong>
+                                    </div>
+
+                                    <div id="verify-status-banner" class="compare-status-banner hidden">
+                                        <!-- Filled by JS -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Source calculated hashes table -->
+                            <div class="table-wrapper" style="margin-top: 20px;">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Algorithm</th>
+                                            <th>Calculated Hash Value</th>
+                                            <th style="width: 200px;">Verification Match Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id="verify-row-md5">
+                                            <td>MD5</td>
+                                            <td id="verify-calc-md5" class="mono">-</td>
+                                            <td id="verify-match-md5" class="txt-center">-</td>
+                                        </tr>
+                                        <tr id="verify-row-sha1">
+                                            <td>SHA-1</td>
+                                            <td id="verify-calc-sha1" class="mono">-</td>
+                                            <td id="verify-match-sha1" class="txt-center">-</td>
+                                        </tr>
+                                        <tr id="verify-row-sha256">
+                                            <td>SHA-256</td>
+                                            <td id="verify-calc-sha256" class="mono">-</td>
+                                            <td id="verify-match-sha256" class="txt-center">-</td>
+                                        </tr>
+                                        <tr id="verify-row-sha512">
+                                            <td>SHA-512</td>
+                                            <td id="verify-calc-sha512" class="mono">-</td>
+                                            <td id="verify-match-sha512" class="txt-center">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
@@ -578,6 +994,1127 @@
                     </div>
                 </section>
 
+                <!-- Data Analysis Sections -->
+
+                <!-- 1. Import Section -->
+                <section id="analysis-import" class="tab-content">
+                    <!-- Step 1: Upload and Import -->
+                    <div class="card">
+                        <div class="card-header">
+                            <i data-lucide="upload-cloud" class="card-header-icon"></i>
+                            <h2>Import Dataset</h2>
+                        </div>
+                        <div class="grid-two-cols">
+                            <!-- Dropzone -->
+                            <div class="drop-zone" id="analysis-drop-zone">
+                                <i data-lucide="file-spreadsheet" class="drop-zone-icon"></i>
+                                <p class="drop-zone-text" id="analysis-file-name-label">Drag & Drop CSV, JSON, or Excel (.xlsx) files here</p>
+                                <p class="drop-zone-subtext">or click to select from local drive</p>
+                                <input type="file" id="analysis-file-input" class="hidden" accept=".csv,.json,.xlsx">
+                                <button class="btn btn-secondary btn-sm" id="btn-select-analysis-file" type="button">
+                                    <i data-lucide="file"></i> Select File
+                                </button>
+                            </div>
+                            
+                            <!-- Paste Raw Data -->
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="analysis-raw-input">Or Paste Raw Data (CSV or JSON)</label>
+                                <textarea id="analysis-raw-input" placeholder='Paste CSV content with headers, e.g.:&#10;age,income,gender&#10;25,50000,Male&#10;30,60000,Female&#10;&#10;Or a JSON array of objects...' rows="6" style="font-family: var(--font-mono); font-size: 12px;"></textarea>
+                                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                    <button id="btn-load-raw-data" class="btn btn-primary btn-sm">
+                                        <i data-lucide="play"></i> Parse & Load Data
+                                    </button>
+                                    <button id="btn-load-demo-data" class="btn btn-secondary btn-sm">
+                                        <i data-lucide="sparkles"></i> Load Sample Dataset
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dataset Loaded Overview (shows only when data is active) -->
+                    <div id="analysis-import-status" class="card hidden">
+                        <div class="card-header">
+                            <i data-lucide="check-circle" class="card-header-icon" style="color: var(--success-color);"></i>
+                            <h2 id="analysis-import-status-title">Dataset Loaded Successfully!</h2>
+                        </div>
+                        <p class="dim" style="margin-bottom: 15px;">Use the sidebar navigation tabs under <strong>Data Analysis</strong> to clean, inspect, calculate statistics, or render charts for this dataset.</p>
+                        <div class="stats-info-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+                            <div class="stat-info-box" style="background-color: var(--bg-surface-elevated); padding: 12px; border-radius: var(--border-radius); border: 1px solid var(--border-color); text-align: center;">
+                                <span class="stat-info-label" style="display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Total Rows</span>
+                                <span class="stat-info-val" id="meta-import-rows" style="font-size: 20px; font-weight: 700; color: var(--text-main);">0</span>
+                            </div>
+                            <div class="stat-info-box" style="background-color: var(--bg-surface-elevated); padding: 12px; border-radius: var(--border-radius); border: 1px solid var(--border-color); text-align: center;">
+                                <span class="stat-info-label" style="display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Total Columns</span>
+                                <span class="stat-info-val" id="meta-import-cols" style="font-size: 20px; font-weight: 700; color: var(--text-main);">0</span>
+                            </div>
+                            <div class="stat-info-box" style="background-color: var(--bg-surface-elevated); padding: 12px; border-radius: var(--border-radius); border: 1px solid var(--border-color); text-align: center;">
+                                <span class="stat-info-label" style="display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Duplicate Rows</span>
+                                <span class="stat-info-val" id="meta-import-dupes" style="font-size: 20px; font-weight: 700; color: var(--warning-color);">0</span>
+                            </div>
+                            <div class="stat-info-box" style="background-color: var(--bg-surface-elevated); padding: 12px; border-radius: var(--border-radius); border: 1px solid var(--border-color); text-align: center;">
+                                <span class="stat-info-label" style="display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Missing Values</span>
+                                <span class="stat-info-val" id="meta-import-missing" style="font-size: 20px; font-weight: 700; color: var(--danger-color);">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Preview Section -->
+                <section id="analysis-preview" class="tab-content">
+                    <!-- Placeholder -->
+                    <div class="card no-data-placeholder text-center" style="padding: 60px 20px;">
+                        <i data-lucide="database" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 16px;"></i>
+                        <h3>No Dataset Loaded</h3>
+                        <p class="dim" style="margin-top: 8px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                            You need to load a dataset before exploring its rows. Please upload a CSV, JSON, or Excel file on the Import Dataset section.
+                        </p>
+                        <button class="btn btn-primary btn-sm btn-goto-import" style="margin-top: 20px;" type="button">
+                            <i data-lucide="upload-cloud"></i> Go to Import Dataset
+                        </button>
+                    </div>
+
+                    <!-- Active content -->
+                    <div class="card active-data-content hidden">
+                        <div class="card-header" style="justify-content: space-between; display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <i data-lucide="eye" class="card-header-icon"></i>
+                                <h2>Data Explorer Preview</h2>
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <input type="text" id="analysis-search-input" placeholder="Search preview rows..." style="padding: 6px 12px; font-size: 12px; width: 180px; margin-bottom: 0; background-color: var(--bg-base); border: 1px solid var(--border-color); color: var(--text-main); border-radius: var(--border-radius);">
+                                <span id="analysis-table-pagination-info" style="font-size: 12px; color: var(--text-muted);">Showing 0-0 of 0</span>
+                                <div class="btn-group" style="display: flex; gap: 4px;">
+                                    <button id="btn-prev-page" class="btn btn-secondary btn-xs" style="padding: 4px 8px; font-size: 11px;" type="button"><i data-lucide="chevron-left" style="width:14px; height:14px;"></i></button>
+                                    <button id="btn-next-page" class="btn btn-secondary btn-xs" style="padding: 4px 8px; font-size: 11px;" type="button"><i data-lucide="chevron-right" style="width:14px; height:14px;"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-wrapper" style="max-height: 480px; overflow: auto; border: 1px solid var(--border-color); border-radius: var(--border-radius);">
+                            <table class="data-table" id="analysis-data-table" style="width: 100%;">
+                                <thead>
+                                    <tr id="analysis-table-header">
+                                        <!-- Column headers dynamically created -->
+                                    </tr>
+                                </thead>
+                                <tbody id="analysis-table-body">
+                                    <!-- Row data dynamically filled -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. Cleaning Section -->
+                <section id="analysis-cleaning" class="tab-content">
+                    <!-- Placeholder -->
+                    <div class="card no-data-placeholder text-center" style="padding: 60px 20px;">
+                        <i data-lucide="database" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 16px;"></i>
+                        <h3>No Dataset Loaded</h3>
+                        <p class="dim" style="margin-top: 8px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                            You need to load a dataset before running cleaning operations. Please upload a CSV, JSON, or Excel file on the Import Dataset section.
+                        </p>
+                        <button class="btn btn-primary btn-sm btn-goto-import" style="margin-top: 20px;" type="button">
+                            <i data-lucide="upload-cloud"></i> Go to Import Dataset
+                        </button>
+                    </div>
+
+                    <!-- Active content -->
+                    <div class="active-data-content hidden">
+                        <div class="grid-two-cols">
+                            <!-- Data Info Card -->
+                            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 24px;">
+                                <div>
+                                    <div class="card-header">
+                                        <i data-lucide="database" class="card-header-icon"></i>
+                                        <h2>Dataset Summary</h2>
+                                    </div>
+                                    <div class="stats-info-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                        <div class="stat-info-box" style="background-color: var(--bg-surface-elevated); padding: 12px; border-radius: var(--border-radius); border: 1px solid var(--border-color); text-align: center;">
+                                            <span class="stat-info-label" style="display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Total Rows</span>
+                                            <span class="stat-info-val" id="meta-total-rows" style="font-size: 20px; font-weight: 700; color: var(--text-main);">0</span>
+                                        </div>
+                                        <div class="stat-info-box" style="background-color: var(--bg-surface-elevated); padding: 12px; border-radius: var(--border-radius); border: 1px solid var(--border-color); text-align: center;">
+                                            <span class="stat-info-label" style="display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Total Columns</span>
+                                            <span class="stat-info-val" id="meta-total-cols" style="font-size: 20px; font-weight: 700; color: var(--text-main);">0</span>
+                                        </div>
+                                        <div class="stat-info-box" style="background-color: var(--bg-surface-elevated); padding: 12px; border-radius: var(--border-radius); border: 1px solid var(--border-color); text-align: center;">
+                                            <span class="stat-info-label" style="display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Duplicate Rows</span>
+                                            <span class="stat-info-val" id="meta-duplicate-rows" style="font-size: 20px; font-weight: 700; color: var(--warning-color);">0</span>
+                                        </div>
+                                        <div class="stat-info-box" style="background-color: var(--bg-surface-elevated); padding: 12px; border-radius: var(--border-radius); border: 1px solid var(--border-color); text-align: center;">
+                                            <span class="stat-info-label" style="display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Missing Values</span>
+                                            <span class="stat-info-val" id="meta-missing-vals" style="font-size: 20px; font-weight: 700; color: var(--danger-color);">0</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column-types-container" style="margin-top: 15px;">
+                                    <label style="font-size: 11px; margin-bottom: 6px; display: block;">Columns & Types</label>
+                                    <div id="analysis-column-list" class="column-badges-list" style="display: flex; flex-wrap: wrap; gap: 8px; max-height: 120px; overflow-y: auto; padding: 4px; border: 1px solid var(--border-color); border-radius: var(--border-radius); background-color: var(--bg-base);">
+                                        <!-- Column names & type selector badges filled here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Data Cleaning Card -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <i data-lucide="brush" class="card-header-icon"></i>
+                                    <h2>Data Cleaning Tools</h2>
+                                </div>
+                                
+                                <div class="cleaning-group" style="display: flex; flex-direction: column; gap: 14px;">
+                                    <!-- Duplicates cleaning -->
+                                    <div class="clean-action-item" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                                        <div class="clean-action-info">
+                                            <h4 style="font-size: 13px; font-weight: 600; color: var(--text-main);">Duplicate Rows</h4>
+                                            <p class="dim" style="font-size: 11px; color: var(--text-muted);">Find and remove identical rows in the dataset.</p>
+                                        </div>
+                                        <div class="clean-action-controls" style="display: flex; gap: 8px;">
+                                            <button id="btn-highlight-dupes" class="btn btn-secondary btn-xs" style="padding: 4px 8px; font-size: 11px;" type="button">
+                                                <i data-lucide="eye" style="width: 12px; height: 12px;"></i> Find/Point
+                                            </button>
+                                            <button id="btn-remove-dupes" class="btn btn-danger btn-xs" style="padding: 4px 8px; font-size: 11px;" type="button">
+                                                <i data-lucide="trash-2" style="width: 12px; height: 12px;"></i> Remove
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Inconsistent / Blank values cleaning -->
+                                    <div class="clean-action-item" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                                        <div class="clean-action-info">
+                                            <h4 style="font-size: 13px; font-weight: 600; color: var(--text-main);">Blank / Invalid Values</h4>
+                                            <p class="dim" style="font-size: 11px; color: var(--text-muted);">Remove rows with missing values or invalid data types.</p>
+                                        </div>
+                                        <div class="clean-action-controls">
+                                            <button id="btn-remove-invalid" class="btn btn-danger btn-xs" style="padding: 4px 8px; font-size: 11px;" type="button">
+                                                <i data-lucide="trash-2" style="width: 12px; height: 12px;"></i> Drop Missing
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Text Standardiser -->
+                                    <div class="clean-action-item" style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; flex-direction: column; gap: 8px;">
+                                        <div class="clean-action-info">
+                                            <h4 style="font-size: 13px; font-weight: 600; color: var(--text-main);">Text Standardization</h4>
+                                            <p class="dim" style="font-size: 11px; color: var(--text-muted);">Normalize text values (trim whitespaces, change casing format).</p>
+                                        </div>
+                                        <div class="clean-action-controls" style="display: flex; gap: 8px; flex-direction: column; width: 100%;">
+                                            <div style="display: flex; gap: 8px;">
+                                                <select id="clean-text-col" class="custom-select custom-select-sm" style="flex:1; padding: 4px; font-size: 12px;">
+                                                    <!-- Option list of categorical columns -->
+                                                </select>
+                                                <select id="clean-text-op" class="custom-select custom-select-sm" style="flex:1; padding: 4px; font-size: 12px;">
+                                                    <option value="trim">Trim Spaces</option>
+                                                    <option value="lower">lowercase</option>
+                                                    <option value="upper">UPPERCASE</option>
+                                                    <option value="title">Title Case</option>
+                                                </select>
+                                            </div>
+                                            <button id="btn-standardize-text" class="btn btn-secondary btn-xs" style="width: 100%; padding: 4px 8px; font-size: 11px;" type="button">
+                                                <i data-lucide="sparkles" style="width: 12px; height: 12px;"></i> Standardize
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Outliers management -->
+                                    <div class="clean-action-item" style="display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 0; flex-direction: column; gap: 8px;">
+                                        <div class="clean-action-info">
+                                            <h4 style="font-size: 13px; font-weight: 600; color: var(--text-main);">Outliers Management</h4>
+                                            <p class="dim" style="font-size: 11px; color: var(--text-muted);">Detect numerical anomalies and clean/impute them.</p>
+                                        </div>
+                                        <div class="clean-action-controls" style="display: flex; gap: 8px; flex-direction: column; width: 100%;">
+                                            <div style="display: flex; gap: 8px;">
+                                                <select id="clean-outlier-col" class="custom-select custom-select-sm" style="flex:1.5; padding: 4px; font-size: 12px;">
+                                                    <!-- Numeric columns -->
+                                                </select>
+                                                <select id="clean-outlier-method" class="custom-select custom-select-sm" style="flex:1; padding: 4px; font-size: 12px;">
+                                                    <option value="iqr">IQR (1.5x)</option>
+                                                    <option value="zscore">Z-Score (3x)</option>
+                                                </select>
+                                            </div>
+                                            <div style="display: flex; gap: 6px;">
+                                                <button id="btn-detect-outliers" class="btn btn-secondary btn-xs" style="flex: 1; padding: 4px 8px; font-size: 11px;" type="button">
+                                                    <i data-lucide="search" style="width: 12px; height: 12px;"></i> Detect
+                                                </button>
+                                                <select id="clean-outlier-action" class="custom-select custom-select-sm" style="flex: 1.5; padding: 4px; font-size: 12px;">
+                                                    <option value="mean">Replace with Mean</option>
+                                                    <option value="median">Replace with Median</option>
+                                                    <option value="delete">Delete Rows</option>
+                                                    <option value="clip">Clip to Bounds</option>
+                                                </select>
+                                                <button id="btn-fix-outliers" class="btn btn-primary btn-xs" style="padding: 4px 8px; font-size: 11px;" type="button">
+                                                    <i data-lucide="check" style="width: 12px; height: 12px;"></i> Apply
+                                                </button>
+                                            </div>
+                                            <div id="outlier-alert-info" style="font-size: 11px; margin-top: 4px; text-align: left; color: var(--text-muted);">
+                                                No outlier scans performed yet.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. Stats Section -->
+                <section id="analysis-stats" class="tab-content">
+                    <!-- Placeholder -->
+                    <div class="card no-data-placeholder text-center" style="padding: 60px 20px;">
+                        <i data-lucide="database" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 16px;"></i>
+                        <h3>No Dataset Loaded</h3>
+                        <p class="dim" style="margin-top: 8px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                            You need to load a dataset before calculating descriptive statistics. Please upload a CSV, JSON, or Excel file on the Import Dataset section.
+                        </p>
+                        <button class="btn btn-primary btn-sm btn-goto-import" style="margin-top: 20px;" type="button">
+                            <i data-lucide="upload-cloud"></i> Go to Import Dataset
+                        </button>
+                    </div>
+
+                    <!-- Active content -->
+                    <div class="card active-data-content hidden">
+                        <div class="card-header">
+                            <i data-lucide="calculator" class="card-header-icon"></i>
+                            <h2>Summary Statistics</h2>
+                        </div>
+                        <div class="table-wrapper" style="overflow-x: auto;">
+                            <table class="data-table" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Variable</th>
+                                        <th>Mean</th>
+                                        <th>Median</th>
+                                        <th>Min</th>
+                                        <th>Max</th>
+                                        <th>Std Dev</th>
+                                        <th>Range</th>
+                                        <th>Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="summary-stats-tbody">
+                                    <!-- Dynamically filled with stats for numerical columns -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Chi-Square Section -->
+                <section id="analysis-chi" class="tab-content">
+                    <!-- Placeholder -->
+                    <div class="card no-data-placeholder text-center" style="padding: 60px 20px;">
+                        <i data-lucide="database" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 16px;"></i>
+                        <h3>No Dataset Loaded</h3>
+                        <p class="dim" style="margin-top: 8px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                            You need to load a dataset before running independence tests. Please upload a CSV, JSON, or Excel file on the Import Dataset section.
+                        </p>
+                        <button class="btn btn-primary btn-sm btn-goto-import" style="margin-top: 20px;" type="button">
+                            <i data-lucide="upload-cloud"></i> Go to Import Dataset
+                        </button>
+                    </div>
+
+                    <!-- Active content -->
+                    <div class="card active-data-content hidden">
+                        <div class="card-header">
+                            <i data-lucide="scale" class="card-header-icon"></i>
+                            <h2>Chi-Square Independence Test</h2>
+                        </div>
+
+                        <!-- Column Selection Area -->
+                        <div style="display:flex; gap:12px; margin-bottom:14px; align-items:flex-start;">
+                            <!-- Multi-column checkbox list -->
+                            <div style="flex:2;">
+                                <label style="font-size:11px; margin-bottom:6px; display:block; color:var(--text-muted);">
+                                    Select Columns to Analyze <span style="color:var(--primary-color);">(pick 2 or more)</span>
+                                </label>
+                                <div id="chi-col-checkboxes" class="chi-col-picker">
+                                    <!-- Filled dynamically -->
+                                </div>
+                            </div>
+                            <!-- Hue / Group-By column -->
+                            <div style="flex:1; min-width:120px;">
+                                <label for="chi-hue-col" style="font-size:11px; margin-bottom:6px; display:block; color:var(--text-muted);">Color By (Pair Plot)</label>
+                                <select id="chi-hue-col" class="custom-select custom-select-sm" style="padding:4px; font-size:12px; width:100%;">
+                                    <option value="">(none)</option>
+                                </select>
+                                <!-- Legacy hidden selects kept for backward compat -->
+                                <select id="chi-col-a" style="display:none;"></select>
+                                <select id="chi-col-b" style="display:none;"></select>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; gap:8px; margin-bottom:14px;">
+                            <button id="btn-run-chi-test" class="btn btn-primary btn-sm" style="flex:1;" type="button">
+                                <i data-lucide="play" style="width:14px;height:14px;"></i> Run Pairwise Chi-Square
+                            </button>
+                            <button id="btn-show-pairplot" class="btn btn-secondary btn-sm" style="flex:1;" type="button">
+                                <i data-lucide="grid-2x2" style="width:14px;height:14px;"></i> Show Pair Plot (Popup)
+                            </button>
+                        </div>
+
+                        <!-- Results Area -->
+                        <div id="chi-results-area" class="hidden">
+                            <!-- P-Value Heatmap Matrix -->
+                            <div style="margin-bottom:14px;">
+                                <label style="font-size:11px; margin-bottom:6px; display:block; color:var(--text-muted);">
+                                    Pairwise p-Value Matrix
+                                    <span style="font-size:10px; margin-left:6px;">
+                                        <span style="background:rgba(16,185,129,0.2); padding:1px 6px; border-radius:3px; color:#10b981;">p &lt; 0.05 significant</span>
+                                        <span style="background:rgba(239,68,68,0.15); padding:1px 6px; border-radius:3px; color:#ef4444; margin-left:4px;">p ≥ 0.05 not significant</span>
+                                    </span>
+                                </label>
+                                <div class="table-wrapper" style="overflow:auto; border:1px solid var(--border-color); border-radius:var(--border-radius);">
+                                    <table class="data-table compact-table" id="chi-heatmap-table" style="font-size:11px; width:100%;"></table>
+                                </div>
+                            </div>
+
+                            <!-- Pair Detail Accordions -->
+                            <div>
+                                <label style="font-size:11px; margin-bottom:6px; display:block; color:var(--text-muted);">Pair Details (click to expand)</label>
+                                <div id="chi-pairs-list" style="display:flex; flex-direction:column; gap:6px;"></div>
+                            </div>
+
+                            <!-- Legacy stat placeholders (used by export) -->
+                            <span id="chi-stat-val" style="display:none;">-</span>
+                            <span id="chi-df-val" style="display:none;">-</span>
+                            <span id="chi-p-val" style="display:none;">-</span>
+                            <span id="chi-significance-badge" style="display:none;">-</span>
+                            <div id="chi-interpretation" style="display:none;"></div>
+                            <table id="chi-contingency-table" style="display:none;"></table>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- 6. Charts Section -->
+                <section id="analysis-charts" class="tab-content">
+                    <!-- Placeholder -->
+                    <div class="card no-data-placeholder text-center" style="padding: 60px 20px;">
+                        <i data-lucide="database" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 16px;"></i>
+                        <h3>No Dataset Loaded</h3>
+                        <p class="dim" style="margin-top: 8px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                            You need to load a dataset before drawing plots. Please upload a CSV, JSON, or Excel file on the Import Dataset section.
+                        </p>
+                        <button class="btn btn-primary btn-sm btn-goto-import" style="margin-top: 20px;" type="button">
+                            <i data-lucide="upload-cloud"></i> Go to Import Dataset
+                        </button>
+                    </div>
+                    <!-- Active content -->
+                    <div class="card active-data-content hidden">
+                        <div class="card-header">
+                            <i data-lucide="line-chart" class="card-header-icon"></i>
+                            <h2>Data Visualisation Studio</h2>
+                        </div>
+
+                        <!-- Controls Row -->
+                        <div class="viz-controls-row">
+                            <!-- Feature multi-select -->
+                            <div class="viz-control-block" style="flex:2;">
+                                <label style="font-size:11px;color:var(--text-muted);margin-bottom:6px;display:block;">
+                                    Features to Plot <span style="color:var(--primary-color);">(check 1 or more)</span>
+                                </label>
+                                <div id="viz-col-checkboxes" class="chi-col-picker"></div>
+                            </div>
+
+                            <!-- Right-side controls -->
+                            <div class="viz-control-block" style="flex:1;display:flex;flex-direction:column;gap:10px;">
+                                <div>
+                                    <label for="plot-type-select" style="font-size:11px;color:var(--text-muted);margin-bottom:4px;display:block;">Chart Type</label>
+                                    <select id="plot-type-select" class="custom-select custom-select-sm" style="width:100%;padding:4px;font-size:12px;">
+                                        <option value="histogram">Histogram Distribution</option>
+                                        <option value="std-dev">Normal Curve &amp; Std Dev</option>
+                                        <option value="boxplot">Box &amp; Whisker Plot</option>
+                                        <option value="scatter">Scatter Plot (needs 2 cols)</option>
+                                        <option value="bar">Bar Chart</option>
+                                        <option value="line">Line Chart</option>
+                                        <option value="heatmap">Correlation Heatmap (all)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="viz-group-col" style="font-size:11px;color:var(--text-muted);margin-bottom:4px;display:block;">Group / Color By</label>
+                                    <select id="viz-group-col" class="custom-select custom-select-sm" style="width:100%;padding:4px;font-size:12px;">
+                                        <option value="">(none)</option>
+                                    </select>
+                                </div>
+                                <!-- Legacy hidden selects kept for internal compat -->
+                                <select id="plot-x-select" style="display:none;"></select>
+                                <select id="plot-y-select" style="display:none;"></select>
+                                <div id="plot-axis-x-group" style="display:none;"></div>
+                                <div id="plot-axis-y-group" style="display:none;"></div>
+
+                                <button id="btn-render-plot" class="btn btn-primary btn-sm" style="width:100%;" type="button">
+                                    <i data-lucide="play" style="width:13px;height:13px;"></i> Draw Charts
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Chart Grid Output -->
+                        <div id="viz-charts-grid" class="viz-charts-grid">
+                            <div class="viz-empty-state">
+                                <i data-lucide="bar-chart-2" style="width:36px;height:36px;color:var(--text-dark);margin-bottom:10px;"></i>
+                                <p style="font-size:13px;color:var(--text-muted);">Select features and click <strong>Draw Charts</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7. Export Results Section -->
+                <section id="analysis-export" class="tab-content">
+                    <!-- Placeholder -->
+                    <div class="card no-data-placeholder text-center" style="padding: 60px 20px;">
+                        <i data-lucide="database" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 16px;"></i>
+                        <h3>No Dataset Loaded</h3>
+                        <p class="dim" style="margin-top: 8px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                            You need to load a dataset before exporting reports. Please upload a CSV, JSON, or Excel file on the Import Dataset section.
+                        </p>
+                        <button class="btn btn-primary btn-sm btn-goto-import" style="margin-top: 20px;" type="button">
+                            <i data-lucide="upload-cloud"></i> Go to Import Dataset
+                        </button>
+                    </div>
+
+                    <!-- Active content -->
+                    <div class="active-data-content hidden">
+                        <div class="grid-two-cols">
+                            <!-- Card 1: Cleaned Dataset Export -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <i data-lucide="file-spreadsheet" class="card-header-icon"></i>
+                                    <h2>Export Cleaned Dataset</h2>
+                                </div>
+                                <p class="dim" style="margin-bottom: 15px;">Save your cleaned, deduplicated, and standardized dataset to your local storage.</p>
+                                
+                                <div class="form-group">
+                                    <label for="export-data-format">File Format</label>
+                                    <select id="export-data-format" class="custom-select custom-select-sm" style="width: 100%; margin-bottom: 15px; padding: 6px; font-size: 13px;">
+                                        <option value="csv">Comma-Separated Values (.csv)</option>
+                                        <option value="xlsx">Excel Spreadsheet (.xlsx)</option>
+                                        <option value="json">JSON Array of Objects (.json)</option>
+                                    </select>
+                                </div>
+                                
+                                <button id="btn-export-dataset" class="btn btn-primary" style="width: 100%;" type="button">
+                                    <i data-lucide="download"></i> Download Cleaned Data
+                                </button>
+                            </div>
+
+                            <!-- Card 2: Executive Report & Chart Images -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <i data-lucide="file-text" class="card-header-icon"></i>
+                                    <h2>Generate Analysis Report</h2>
+                                </div>
+                                <p class="dim" style="margin-bottom: 15px;">Create a complete summary report containing metadata, statistics, and embedded visualizations.</p>
+                                
+                                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; background-color: var(--bg-base); padding: 12px; border-radius: var(--border-radius); border: 1px solid var(--border-color);">
+                                    <label style="font-weight: 600; font-size: 12px; display: block; margin-bottom: 4px;">Include Sections:</label>
+                                    <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
+                                        <input type="checkbox" id="report-inc-stats" checked style="width: 14px; height: 14px; margin: 0;"> Summary Statistics Table
+                                    </label>
+                                    <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
+                                        <input type="checkbox" id="report-inc-chi" checked style="width: 14px; height: 14px; margin: 0;"> Chi-Square Test Contingency Matrix & Results
+                                    </label>
+                                    <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
+                                        <input type="checkbox" id="report-inc-charts" checked style="width: 14px; height: 14px; margin: 0;"> Interactive Plots (Box Plot & Normal Distribution)
+                                    </label>
+                                </div>
+                                
+                                <div style="display: flex; gap: 10px;">
+                                    <button id="btn-export-report" class="btn btn-primary" style="flex: 1.5;" type="button">
+                                        <i data-lucide="file-output"></i> Generate HTML Report
+                                    </button>
+                                    <button id="btn-export-chart-png" class="btn btn-secondary" style="flex: 1;" type="button">
+                                        <i data-lucide="image"></i> Save Active Chart (PNG)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- Static Malware Analysis Sections -->
+
+                <!-- 1. Malware Hash Calculator -->
+                <section id="malware-hash-calc" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <i data-lucide="hash" class="card-header-icon"></i>
+                            <h2>Malware Sample Hash Calculator</h2>
+                        </div>
+                        <p class="dim" style="margin-bottom: 15px;">Upload a sample binary or file to compute cryptographic checksums (MD5, SHA-1, SHA-256, SHA-512) and Shannon entropy offline.</p>
+                        
+                        <div class="drop-zone" id="dz-malware-calc" style="border: 2px dashed var(--border-color); border-radius: var(--border-radius); padding: 28px; text-align: center; cursor: pointer; transition: all 0.2s ease; margin-bottom: 15px;">
+                            <i data-lucide="upload-cloud" style="width:38px; height:38px; color:var(--primary-color); margin-bottom:8px;"></i>
+                            <p style="margin:0; font-size:14px; font-weight:600; color:var(--text-main);">Click or Drag &amp; Drop Malware Sample File Here</p>
+                            <span class="dim" style="font-size:12px; display:block; margin-top:4px;">Supports any binary, EXE, DLL, PDF, document, archive, or raw file</span>
+                            <input type="file" id="malware-calc-file" style="display:none;">
+                        </div>
+
+                        <div id="malware-calc-results" class="hidden" style="margin-top: 20px;">
+                            <div class="grid-two-cols" style="gap: 12px; margin-bottom: 15px;">
+                                <div style="background:var(--bg-base); padding: 12px; border-radius: var(--border-radius); border: 1px solid var(--border-color);">
+                                    <span style="font-size:11px; color:var(--text-muted); display:block; text-transform:uppercase;">File Name</span>
+                                    <strong id="mal-calc-name" style="font-size:14px; color:var(--primary-color); word-break:break-all;">-</strong>
+                                </div>
+                                <div style="background:var(--bg-base); padding: 12px; border-radius: var(--border-radius); border: 1px solid var(--border-color);">
+                                    <span style="font-size:11px; color:var(--text-muted); display:block; text-transform:uppercase;">File Size</span>
+                                    <strong id="mal-calc-size" style="font-size:14px; color:var(--primary-color);">-</strong>
+                                </div>
+                            </div>
+
+                            <!-- Hashes & Forensic Identifiers table -->
+                            <div style="background:var(--bg-base); padding: 15px; border-radius: var(--border-radius); border: 1px solid var(--border-color); margin-bottom: 15px;">
+                                <h4 style="margin-top:0; margin-bottom:12px; color:var(--primary-color);">Cryptographic Checksums &amp; Forensic Hashes</h4>
+                                <div style="display:flex; flex-direction:column; gap:10px;">
+                                    <div class="grid-two-cols" style="gap:10px; margin-bottom:6px;">
+                                        <div style="background:var(--bg-surface); padding:8px 12px; border-radius:4px; border:1px solid var(--border-color);">
+                                            <span style="font-size:10px; color:var(--text-muted); display:block; text-transform:uppercase;">Magic Byte File Format</span>
+                                            <strong id="mal-calc-magic" style="font-size:12px; color:var(--primary-color);">-</strong>
+                                        </div>
+                                        <div style="background:var(--bg-surface); padding:8px 12px; border-radius:4px; border:1px solid var(--border-color);">
+                                            <span style="font-size:10px; color:var(--text-muted); display:block; text-transform:uppercase;">Authenticode Digital Signature</span>
+                                            <strong id="mal-calc-authenticode" style="font-size:12px; color:var(--text-main);">-</strong>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style="font-size:11px; color:var(--text-muted);">MD5 Checksum</label>
+                                        <div style="display:flex; gap:6px;">
+                                            <input type="text" id="mal-calc-md5" class="custom-input" readonly style="font-family:var(--font-mono); font-size:12px;">
+                                            <button class="btn btn-secondary btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('mal-calc-md5').value); alert('MD5 copied!');">Copy</button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style="font-size:11px; color:var(--text-muted);">SHA-1 Checksum</label>
+                                        <div style="display:flex; gap:6px;">
+                                            <input type="text" id="mal-calc-sha1" class="custom-input" readonly style="font-family:var(--font-mono); font-size:12px;">
+                                            <button class="btn btn-secondary btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('mal-calc-sha1').value); alert('SHA-1 copied!');">Copy</button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style="font-size:11px; color:var(--text-muted);">SHA-256 Checksum</label>
+                                        <div style="display:flex; gap:6px;">
+                                            <input type="text" id="mal-calc-sha256" class="custom-input" readonly style="font-family:var(--font-mono); font-size:12px;">
+                                            <button class="btn btn-secondary btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('mal-calc-sha256').value); alert('SHA-256 copied!');">Copy</button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style="font-size:11px; color:var(--text-muted);">ImpHash (PE Import Table Hash)</label>
+                                        <div style="display:flex; gap:6px;">
+                                            <input type="text" id="mal-calc-imphash" class="custom-input" readonly style="font-family:var(--font-mono); font-size:12px;" placeholder="Computed for PE binaries">
+                                            <button class="btn btn-secondary btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('mal-calc-imphash').value); alert('ImpHash copied!');">Copy</button>
+                                        </div>
+                                    </div>
+                                    <div class="grid-two-cols" style="gap:10px;">
+                                        <div>
+                                            <label style="font-size:11px; color:var(--text-muted);">CRC32 Checksum</label>
+                                            <input type="text" id="mal-calc-crc32" class="custom-input" readonly style="font-family:var(--font-mono); font-size:12px;">
+                                        </div>
+                                        <div>
+                                            <label style="font-size:11px; color:var(--text-muted);">SHA-512 Checksum</label>
+                                            <input type="text" id="mal-calc-sha512" class="custom-input" readonly style="font-family:var(--font-mono); font-size:12px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Entropy gauge card -->
+                            <div style="background:var(--bg-base); padding: 15px; border-radius: var(--border-radius); border: 1px solid var(--border-color);">
+                                <h4 style="margin-top:0; margin-bottom:6px; color:var(--primary-color);">File Shannon Entropy Diagnostic</h4>
+                                <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">Entropy ranges from 0.0 (uniform) to 8.0 (completely random / encrypted / packed).</p>
+                                <div style="display:flex; align-items:center; gap:15px;">
+                                    <span id="mal-calc-entropy-val" style="font-size:24px; font-weight:bold; font-family:var(--font-mono); color:var(--primary-color);">0.00</span>
+                                    <div style="flex:1; background:var(--bg-surface-elevated); height:12px; border-radius:6px; overflow:hidden; border:1px solid var(--border-color);">
+                                        <div id="mal-calc-entropy-bar" style="height:100%; width:0%; background:var(--primary-color); transition:width 0.4s;"></div>
+                                    </div>
+                                    <span id="mal-calc-entropy-status" class="badge" style="font-size:11px;">Unpacked</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Threat Hash Verifier & Comparator -->
+                <section id="malware-hash-compare" class="tab-content">
+                    <div class="grid-two-cols">
+                        <!-- Mode A: File Hash Comparison -->
+                        <div class="card">
+                            <div class="card-header">
+                                <i data-lucide="git-compare" class="card-header-icon"></i>
+                                <h2>Sample File Comparator</h2>
+                            </div>
+                            <p class="dim" style="margin-bottom: 15px;">Compare two malware samples side-by-side to verify if they are byte-identical.</p>
+                            
+                            <div class="form-group">
+                                <label>Sample File A</label>
+                                <input type="file" id="mal-compare-file-a" class="custom-input" style="padding:6px;">
+                            </div>
+                            <div class="form-group" style="margin-top:10px;">
+                                <label>Sample File B</label>
+                                <input type="file" id="mal-compare-file-b" class="custom-input" style="padding:6px;">
+                            </div>
+
+                            <button id="btn-mal-compare-files" class="btn btn-primary" style="width:100%; margin-top:15px;">
+                                <i data-lucide="scale"></i> Compare Samples
+                            </button>
+
+                            <div id="mal-compare-file-result" class="hidden" style="margin-top:15px; padding:12px; border-radius:4px; text-align:center; font-weight:600;"></div>
+                        </div>
+
+                        <!-- Mode B: Threat IOC Database Lookup -->
+                        <div class="card">
+                            <div class="card-header">
+                                <i data-lucide="shield-alert" class="card-header-icon"></i>
+                                <h2>Threat IOC Database Verifier</h2>
+                            </div>
+                            <p class="dim" style="margin-bottom: 15px;">Check a sample SHA-256 or MD5 hash against known malicious ransomware / Trojan IOC feeds.</p>
+                            
+                            <div class="form-group">
+                                <label for="mal-ioc-hash-input">Hash Checksum (MD5 / SHA-256)</label>
+                                <input type="text" id="mal-ioc-hash-input" class="custom-input" placeholder="e.g. 84c6058929... or Paste Sample Hash">
+                            </div>
+
+                            <button id="btn-mal-verify-ioc" class="btn btn-primary" style="width:100%; margin-top:15px;">
+                                <i data-lucide="search"></i> Verify Threat Intelligence Hash
+                            </button>
+
+                            <div id="mal-ioc-result-box" class="hidden" style="margin-top:15px; padding:15px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-base);"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. PE Binary Inspector -->
+                <section id="malware-pe-inspector" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <i data-lucide="file-code-2" class="card-header-icon"></i>
+                            <h2>PE Binary & Section Inspector (.exe / .dll)</h2>
+                        </div>
+                        <p class="dim" style="margin-bottom: 15px;">Inspect Windows Portable Executable headers, machine architecture, compile time, and section entropy.</p>
+                        
+                        <div class="drop-zone" id="dz-malware-pe" style="border: 2px dashed var(--border-color); border-radius: var(--border-radius); padding: 28px; text-align: center; cursor: pointer; transition: all 0.2s ease; margin-bottom: 15px;">
+                            <i data-lucide="upload-cloud" style="width:38px; height:38px; color:var(--primary-color); margin-bottom:8px;"></i>
+                            <p style="margin:0; font-size:14px; font-weight:600; color:var(--text-main);">Click or Drag &amp; Drop Executable File Here</p>
+                            <span class="dim" style="font-size:12px; display:block; margin-top:4px;">Supports .exe, .dll, .sys, .bin, .ocx files</span>
+                            <input type="file" id="mal-pe-file-input" style="display:none;" accept=".exe,.dll,.sys,.bin,.ocx">
+                        </div>
+
+                        <div id="mal-pe-output" class="hidden" style="margin-top:20px;">
+                            <!-- Header Meta -->
+                            <div style="background:var(--bg-base); padding:15px; border-radius:6px; border:1px solid var(--border-color); margin-bottom:15px;">
+                                <h4 style="margin-top:0; color:var(--primary-color);">PE Header & Metadata Summary</h4>
+                                <div class="grid-two-cols" style="gap:10px; font-size:12px;">
+                                    <div><strong>Architecture:</strong> <span id="pe-meta-arch">-</span></div>
+                                    <div><strong>Compile Timestamp:</strong> <span id="pe-meta-timestamp">-</span></div>
+                                    <div><strong>Subsystem:</strong> <span id="pe-meta-subsystem">-</span></div>
+                                    <div><strong>Entry Point (RVA):</strong> <span id="pe-meta-entrypoint" style="font-family:var(--font-mono);">-</span></div>
+                                    <div><strong>Number of Sections:</strong> <span id="pe-meta-sections-count">-</span></div>
+                                    <div><strong>Overlay Detected:</strong> <span id="pe-meta-overlay">-</span></div>
+                                </div>
+                            </div>
+
+                            <!-- Section Entropy Table -->
+                            <div style="background:var(--bg-base); padding:15px; border-radius:6px; border:1px solid var(--border-color);">
+                                <h4 style="margin-top:0; margin-bottom:10px; color:var(--primary-color);">PE Section Entropy Table</h4>
+                                <div style="overflow-x:auto;">
+                                    <table class="data-table" id="pe-sections-table" style="font-size:11px; width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>Section Name</th>
+                                                <th>Virtual Size</th>
+                                                <th>Raw Size</th>
+                                                <th>Entropy (0-8)</th>
+                                                <th>Packer / Encryption Indicator</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. PDF & Office Document Analyst -->
+                <section id="malware-doc-inspector" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <i data-lucide="file-search" class="card-header-icon"></i>
+                            <h2>Document & PDF Static Analyst</h2>
+                        </div>
+                        <p class="dim" style="margin-bottom: 15px;">Inspect PDF stream objects and Office documents (.docx, .docm, .xlsm) for VBA Macros and embedded exploit payloads.</p>
+                        
+                        <div class="drop-zone" id="dz-malware-doc" style="border: 2px dashed var(--border-color); border-radius: var(--border-radius); padding: 28px; text-align: center; cursor: pointer; transition: all 0.2s ease; margin-bottom: 15px;">
+                            <i data-lucide="upload-cloud" style="width:38px; height:38px; color:var(--primary-color); margin-bottom:8px;"></i>
+                            <p style="margin:0; font-size:14px; font-weight:600; color:var(--text-main);">Click or Drag &amp; Drop Document Here</p>
+                            <span class="dim" style="font-size:12px; display:block; margin-top:4px;">Supports .pdf, .doc, .docm, .xls, .xlsm, .docx</span>
+                            <input type="file" id="mal-doc-file-input" style="display:none;" accept=".pdf,.doc,.docx,.docm,.xls,.xlsx,.xlsm">
+                        </div>
+
+                        <div id="mal-doc-output" class="hidden" style="margin-top:20px;">
+                            <div style="background:var(--bg-base); padding:15px; border-radius:6px; border:1px solid var(--border-color);">
+                                <h4 style="margin-top:0; color:var(--primary-color);">Static Document Analysis Findings</h4>
+                                <div id="doc-findings-list" style="display:flex; flex-direction:column; gap:10px; margin-top:10px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 8. VirusTotal Threat Intelligence Clone -->
+                <section id="malware-virustotal-clone" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <i data-lucide="shield-check" class="card-header-icon"></i>
+                            <h2>VirusTotal Threat Intelligence Center</h2>
+                        </div>
+                        <p class="dim" style="margin-bottom: 15px;">Analyze suspicious files or query MD5 / SHA-256 hashes against a 70-Security-Vendor static analysis scanning matrix and MITRE ATT&amp;CK TTP framework offline.</p>
+
+                        <!-- Input Mode Tabs (Upload File vs Search Hash) -->
+                        <div class="grid-two-cols" style="gap:15px; margin-bottom:20px;">
+                            <div>
+                                <label style="font-size:12px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:6px;">Option A: Drag &amp; Drop Sample File</label>
+                                <div class="drop-zone" id="dz-vt-file" style="border: 2px dashed var(--border-color); border-radius: var(--border-radius); padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s ease;">
+                                    <i data-lucide="upload-cloud" style="width:32px; height:32px; color:var(--primary-color); margin-bottom:4px;"></i>
+                                    <p style="margin:0; font-size:13px; font-weight:600;">Scan File via 70 Security Engines</p>
+                                    <span class="dim" style="font-size:11px;">Click or Drag &amp; Drop file here</span>
+                                    <input type="file" id="vt-file-input" style="display:none;">
+                                </div>
+                            </div>
+                            <div>
+                                <label style="font-size:12px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:6px;">Option B: Search Threat Intelligence Hash</label>
+                                <div style="background:var(--bg-base); padding:16px; border-radius:var(--border-radius); border:1px solid var(--border-color); display:flex; flex-direction:column; gap:10px;">
+                                    <input type="text" id="vt-hash-input" class="custom-input" placeholder="Paste MD5, SHA-1, or SHA-256 Hash...">
+                                    <button id="btn-vt-search-hash" class="btn btn-primary" style="width:100%;">
+                                        <i data-lucide="search"></i> Lookup Hash in Threat Matrix
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Results Dashboard -->
+                        <div id="vt-results-output" class="hidden" style="margin-top:20px;">
+                            <!-- Header Bar -->
+                            <div style="background:var(--bg-base); padding:18px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:15px;">
+                                <div style="display:flex; align-items:center; gap:20px;">
+                                    <!-- Circular Gauge -->
+                                    <div id="vt-detection-ring" style="width:70px; height:70px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:conic-gradient(#ef4444 80%, var(--bg-surface-elevated) 0); padding:6px; position:relative;">
+                                        <div style="width:100%; height:100%; border-radius:50%; background:var(--bg-base); display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:13px; font-family:var(--font-mono);" id="vt-detection-ratio-label">0/70</div>
+                                    </div>
+                                    <div>
+                                        <h3 id="vt-res-filename" style="margin:0 0 4px 0; color:var(--text-main); font-size:18px; word-break:break-all;">-</h3>
+                                        <span id="vt-detection-status-text" style="font-weight:700; font-size:13px;">CLEAN</span>
+                                        <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">Size: <span id="vt-res-filesize">-</span> | Format: <span id="vt-res-magic">-</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- File Checksum Details Card -->
+                            <div style="background:var(--bg-base); padding:15px; border-radius:6px; border:1px solid var(--border-color); margin-bottom:20px; font-size:11px;">
+                                <h4 style="margin-top:0; color:var(--primary-color); margin-bottom:10px;">Forensic Identifiers &amp; Checksums</h4>
+                                <div class="grid-two-cols" style="gap:8px;">
+                                    <div><strong>SHA-256:</strong> <code id="vt-res-sha256" style="font-family:var(--font-mono); color:var(--primary-color);">-</code></div>
+                                    <div><strong>MD5:</strong> <code id="vt-res-md5" style="font-family:var(--font-mono);">-</code></div>
+                                    <div><strong>SHA-1:</strong> <code id="vt-res-sha1" style="font-family:var(--font-mono);">-</code></div>
+                                    <div><strong>ImpHash:</strong> <code id="vt-res-imphash" style="font-family:var(--font-mono);">-</code></div>
+                                </div>
+                            </div>
+
+                            <!-- Vendor Scan Matrix -->
+                            <div style="background:var(--bg-base); padding:15px; border-radius:6px; border:1px solid var(--border-color); margin-bottom:20px;">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+                                    <h4 style="margin:0; color:var(--primary-color);">Security Vendor Detections (70 Engines)</h4>
+                                    <div style="display:flex; gap:8px; align-items:center;">
+                                        <div style="display:flex; gap:4px;">
+                                            <button class="btn btn-secondary btn-sm vt-filter-btn active" data-filter="all">All</button>
+                                            <button class="btn btn-secondary btn-sm vt-filter-btn" data-filter="malicious">Malicious</button>
+                                            <button class="btn btn-secondary btn-sm vt-filter-btn" data-filter="clean">Clean</button>
+                                        </div>
+                                        <input type="text" id="vt-vendor-filter" class="custom-input custom-input-sm" style="width:160px;" placeholder="Filter vendors...">
+                                    </div>
+                                </div>
+
+                                <div style="max-height:300px; overflow-y:auto; border:1px solid var(--border-color); border-radius:4px;">
+                                    <table class="data-table" id="vt-vendor-table" style="font-size:11px; width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>Security Vendor</th>
+                                                <th>Result Status</th>
+                                                <th>Threat Detection Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- MITRE ATT&CK Behavior TTPs -->
+                            <div style="background:var(--bg-base); padding:15px; border-radius:6px; border:1px solid var(--border-color);">
+                                <h4 style="margin-top:0; margin-bottom:10px; color:var(--primary-color);">MITRE ATT&amp;CK Framework TTP Mapping</h4>
+                                <div id="vt-mitre-ttps-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- 9. C/C++ 64-bit to 32-bit Code Transformer -->
+                <section id="cpp-arch-converter" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <i data-lucide="code-2" class="card-header-icon"></i>
+                            <h2>C/C++ 64-Bit to 32-Bit Code Transformer</h2>
+                        </div>
+                        <p class="dim" style="margin-bottom: 15px;">Convert 64-bit C/C++ source code (.c, .cpp, .h, .hpp) to 32-bit architecture offline — translates Win64 APIs, preprocessor directives, assembly registers, and integer types 100% client-side without compiler installation.</p>
+
+                        <!-- Transformation Options Grid -->
+                        <div style="background:var(--bg-base); padding:15px; border-radius:6px; border:1px solid var(--border-color); margin-bottom:15px;">
+                            <h4 style="margin-top:0; margin-bottom:10px; color:var(--primary-color);">Transformation &amp; Downcasting Rules</h4>
+                            <div class="grid-three-cols" style="gap:10px; font-size:12px;">
+                                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                    <input type="checkbox" id="opt-cpp-win32-api" checked onchange="runCppTransformation()">
+                                    <span>Win64 APIs (GetWindowLongPtr $\rightarrow$ GetWindowLong, GWLP_* $\rightarrow$ GWL_*)</span>
+                                </label>
+                                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                    <input type="checkbox" id="opt-cpp-macros" checked onchange="runCppTransformation()">
+                                    <span>Macros (_WIN64 $\rightarrow$ _WIN32, _M_X64 $\rightarrow$ _M_IX86, __x86_64__)</span>
+                                </label>
+                                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                    <input type="checkbox" id="opt-cpp-assembly" checked onchange="runCppTransformation()">
+                                    <span>Inline Assembly (rax/rbx/rcx $\rightarrow$ eax/ebx/ecx, qword ptr $\rightarrow$ dword ptr)</span>
+                                </label>
+                                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                    <input type="checkbox" id="opt-cpp-types" checked onchange="runCppTransformation()">
+                                    <span>Integer &amp; Pointer Types (DWORD64, uint64_t, size_t, intptr_t $\rightarrow$ 32-bit)</span>
+                                </label>
+                                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                    <input type="checkbox" id="opt-cpp-formats" checked onchange="runCppTransformation()">
+                                    <span>Printf/Scanf Formats (%lld, %llu, %zu, %I64d $\rightarrow$ %d, %u, %lu)</span>
+                                </label>
+                                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                    <input type="checkbox" id="opt-cpp-pack" checked onchange="runCppTransformation()">
+                                    <span>Struct Packing &amp; Alignment (#pragma pack(8/16) $\rightarrow$ pack(4))</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Drag and drop zone -->
+                        <div class="drop-zone" id="dz-cpp-converter" onclick="document.getElementById('cpp-file-input').click()" style="border: 2px dashed var(--border-color); border-radius: var(--border-radius); padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s ease; margin-bottom: 15px;">
+                            <i data-lucide="upload-cloud" style="width:32px; height:32px; color:var(--primary-color); margin-bottom:4px;"></i>
+                            <p style="margin:0; font-size:13px; font-weight:600;">Click or Drag &amp; Drop C/C++ Source File Here</p>
+                            <span class="dim" style="font-size:11px;">Supports .c, .cpp, .cc, .cxx, .h, .hpp source and header files</span>
+                            <input type="file" id="cpp-file-input" style="display:none;" accept=".c,.cpp,.cc,.cxx,.h,.hpp,.txt" onchange="handleCppFileSelect(event)">
+                        </div>
+
+                        <!-- Source Code Editors Grid -->
+                        <div class="grid-two-cols" style="gap:15px; margin-bottom:15px;">
+                            <div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                    <label style="font-size:11px; color:var(--text-muted); margin:0;">Input 64-Bit C/C++ Source Code</label>
+                                    <div style="display:flex; gap:8px;">
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="loadCppDemoCode()" style="font-size:10px; padding:2px 8px;">Load Demo</button>
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="clearCppCode()" style="font-size:10px; padding:2px 8px;">Clear</button>
+                                    </div>
+                                </div>
+                                <textarea id="cpp-input-code" class="custom-input" rows="14" oninput="runCppTransformation()" style="font-family:var(--font-mono); font-size:12px; resize:vertical;">#include &lt;windows.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
+
+#pragma pack(8)
+struct SystemHeader64 {
+    DWORD64 processId;
+    ULONG_PTR baseAddress;
+    uint64_t memorySize;
+};
+
+void WindowSetup(HWND hwnd) {
+    #ifdef _WIN64
+    LONG_PTR ptr = GetWindowLongPtr(hwnd, GWLP_WNDPROC);
+    SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)ptr);
+    DWORD64 memoryAddress = 0xFFFFFFFF00000000;
+    
+    __asm {
+        mov rax, 0x1000
+        mov rbx, rax
+        mov rcx, [rsp+8]
+    }
+    #endif
+}</textarea>
+                            </div>
+                            <div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                    <label style="font-size:11px; color:var(--text-muted); margin:0;">Transpiled 32-Bit C/C++ / GCC Output</label>
+                                    <span id="cpp-status-badge" style="font-size:10px; color:var(--primary-color); font-weight:600;"></span>
+                                </div>
+                                <textarea id="cpp-output-code" class="custom-input" rows="14" readonly style="font-family:var(--font-mono); font-size:12px; resize:vertical; background:var(--bg-base);" placeholder="Click 'Transform to 32-Bit C/C++', 'Compile with GCC', or 'Emit 32-Bit Assembly'..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- GCC Toolchain Status Bar -->
+                        <div id="gcc-status-bar" style="display:flex; align-items:center; justify-content:space-between; background:var(--bg-base); border:1px solid var(--border-color); border-radius:6px; padding:8px 14px; margin-bottom:15px; font-size:12px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <i data-lucide="cpu" style="color:var(--primary-color); width:16px; height:16px;"></i>
+                                <span id="gcc-env-label" style="font-weight:600;">GCC Engine: Checking 32-Bit toolchain...</span>
+                            </div>
+                            <span id="gcc-target-badge" style="background:rgba(16,185,129,0.15); color:var(--primary-color); padding:2px 8px; border-radius:4px; font-size:11px; font-weight:600;">Target: x86 / IA-32 (-m32)</span>
+                        </div>
+
+                        <!-- Actions Bar -->
+                        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;">
+                            <button id="btn-cpp-convert" class="btn btn-primary" onclick="runCppTransformation()">
+                                <i data-lucide="zap"></i> Transform to 32-Bit C/C++
+                            </button>
+                            <button id="btn-cpp-gcc-asm" class="btn btn-primary" onclick="compileWithGcc('asm')" style="background:#0284c7;">
+                                <i data-lucide="binary"></i> Emit 32-Bit Assembly (.S / GCC)
+                            </button>
+                            <button id="btn-cpp-gcc-exe" class="btn btn-primary" onclick="compileWithGcc('exe')" style="background:#7c3aed;">
+                                <i data-lucide="play-circle"></i> Compile 32-Bit .EXE (GCC)
+                            </button>
+                            <button id="btn-cpp-copy" class="btn btn-secondary" onclick="copyCppOutput()">
+                                <i data-lucide="copy"></i> Copy Output
+                            </button>
+                            <button id="btn-cpp-download" class="btn btn-secondary" onclick="downloadCppOutput()">
+                                <i data-lucide="download"></i> Download File
+                            </button>
+                        </div>
+
+                        <!-- Audit & Change Summary Container -->
+                        <div id="cpp-convert-results" style="background:var(--bg-base); padding:15px; border-radius:6px; border:1px solid var(--border-color);">
+                            <h4 style="margin-top:0; color:var(--primary-color); margin-bottom:10px;">Transformation Audit &amp; Refactoring Summary</h4>
+                            <div id="cpp-audit-summary"></div>
+                            <div id="cpp-audit-details" style="margin-top:10px;"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- DIGITAL FORENSICS SUITE SECTIONS -->
+                <!-- ========================================== -->
+
+                <!-- 1. EXIF & Media Metadata Forensics -->
+                <section id="forensics-exif-metadata" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <i data-lucide="image" class="card-header-icon"></i>
+                            <h2>EXIF &amp; Media Metadata Forensic Extractor</h2>
+                        </div>
+                        <p class="dim" style="margin-bottom: 15px;">Extract embedded EXIF headers, camera hardware specs, lens profile, software modification history, and GPS pinpoint coordinates from image and media files.</p>
+
+                        <div class="drop-zone" id="dz-forensics-exif" style="border: 2px dashed var(--border-color); border-radius: var(--border-radius); padding: 28px; text-align: center; cursor: pointer; transition: all 0.2s ease; margin-bottom: 15px;">
+                            <i data-lucide="upload-cloud" style="width:38px; height:38px; color:var(--primary-color); margin-bottom:8px;"></i>
+                            <p style="margin:0; font-size:14px; font-weight:600; color:var(--text-main);">Click or Drag &amp; Drop Image / Document Here</p>
+                            <span class="dim" style="font-size:12px; display:block; margin-top:4px;">Supports JPEG, PNG, TIFF, WebP, PDF files</span>
+                            <input type="file" id="forensics-exif-file-input" style="display:none;" accept=".jpg,.jpeg,.png,.tiff,.tif,.webp,.pdf">
+                        </div>
+
+                        <div id="forensics-exif-output" class="hidden" style="margin-top:20px;">
+                            <!-- File Overview & Device Profile Strip -->
+                            <div class="grid-three-cols" style="gap:10px; margin-bottom:15px;">
+                                <div style="background:var(--bg-base); padding:10px 14px; border-radius:4px; border:1px solid var(--border-color);">
+                                    <span style="font-size:10px; color:var(--text-muted); text-transform:uppercase; display:block;">File Name</span>
+                                    <strong id="exif-file-name" style="font-size:13px; color:var(--text-main); word-break:break-all;">-</strong>
+                                </div>
+                                <div style="background:var(--bg-base); padding:10px 14px; border-radius:4px; border:1px solid var(--border-color);">
+                                    <span style="font-size:10px; color:var(--text-muted); text-transform:uppercase; display:block;">Shooting Phone / Camera</span>
+                                    <strong id="exif-device-model" style="font-size:13px; color:var(--primary-color); word-break:break-all;">-</strong>
+                                </div>
+                                <div style="background:var(--bg-base); padding:10px 14px; border-radius:4px; border:1px solid var(--border-color);">
+                                    <span style="font-size:10px; color:var(--text-muted); text-transform:uppercase; display:block;">Date &amp; Time Taken / Shot</span>
+                                    <strong id="exif-date-taken" style="font-size:13px; color:#34d399; word-break:break-all;">-</strong>
+                                </div>
+                                <div style="background:var(--bg-base); padding:10px 14px; border-radius:4px; border:1px solid var(--border-color);">
+                                    <span style="font-size:10px; color:var(--text-muted); text-transform:uppercase; display:block;">Resolution &amp; Pixel Density</span>
+                                    <strong id="exif-pixel-density" style="font-size:13px; color:var(--text-main); word-break:break-all;">-</strong>
+                                </div>
+                                <div style="background:var(--bg-base); padding:10px 14px; border-radius:4px; border:1px solid var(--border-color);">
+                                    <span style="font-size:10px; color:var(--text-muted); text-transform:uppercase; display:block;">File Size</span>
+                                    <strong id="exif-file-size" style="font-size:13px; color:var(--text-main);">-</strong>
+                                </div>
+                                <div style="background:var(--bg-base); padding:10px 14px; border-radius:4px; border:1px solid var(--border-color);">
+                                    <span style="font-size:10px; color:var(--text-muted); text-transform:uppercase; display:block;">MIME &amp; Format</span>
+                                    <strong id="exif-file-type" style="font-size:13px; color:var(--text-main);">-</strong>
+                                </div>
+                            </div>
+
+                            <!-- Shooting Device & Phone Recognition Hero Banner -->
+                            <div id="exif-device-hero-card" style="margin-bottom:15px;"></div>
+
+                            <!-- GPS Coordinates Box -->
+                            <div id="exif-gps-details" style="margin-bottom:15px;"></div>
+
+                            <!-- Camera Details Grid -->
+                            <div style="background:var(--bg-base); padding:15px; border-radius:6px; border:1px solid var(--border-color); margin-bottom:15px;">
+                                <h4 style="margin-top:0; color:var(--primary-color); margin-bottom:10px;">Camera &amp; Lens Hardware Profile</h4>
+                                <div id="exif-camera-details" class="grid-three-cols" style="gap:10px;"></div>
+                            </div>
+
+                            <!-- Software & Editing History -->
+                            <div style="background:var(--bg-base); padding:15px; border-radius:6px; border:1px solid var(--border-color); margin-bottom:15px;">
+                                <h4 style="margin-top:0; color:var(--primary-color); margin-bottom:10px;">Editing Software &amp; Digital Manipulation Traces</h4>
+                                <div id="exif-software-details" style="display:flex; flex-direction:column; gap:6px;"></div>
+                            </div>
+
+                            <!-- Raw EXIF Tags Table -->
+                            <div style="background:var(--bg-base); padding:15px; border-radius:6px; border:1px solid var(--border-color);">
+                                <h4 style="margin-top:0; color:var(--primary-color); margin-bottom:10px;">All Decoded Metadata Tags</h4>
+                                <div class="table-container" style="max-height:280px; overflow-y:auto;">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:100px;">Tag ID</th>
+                                                <th>Property Name</th>
+                                                <th>Decoded Value</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="exif-raw-table-body"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Interactive Forensic Hex Inspector -->
+                <section id="forensics-hex-carver" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <i data-lucide="terminal" class="card-header-icon"></i>
+                            <h2>Interactive Forensic Hex Inspector &amp; Byte Viewer</h2>
+                        </div>
+                        <p class="dim" style="margin-bottom: 15px;">Inspect byte-level binary streams, search ASCII strings or raw hexadecimal byte sequences, and verify file boundaries client-side.</p>
+
+                        <div class="drop-zone" id="dz-forensics-hex" style="border: 2px dashed var(--border-color); border-radius: var(--border-radius); padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s ease; margin-bottom: 15px;">
+                            <i data-lucide="upload-cloud" style="width:34px; height:34px; color:var(--primary-color); margin-bottom:6px;"></i>
+                            <p style="margin:0; font-size:13px; font-weight:600; color:var(--text-main);">Click or Drag &amp; Drop Binary / Artifact File Here</p>
+                            <input type="file" id="forensics-hex-file-input" style="display:none;">
+                        </div>
+
+                        <div id="forensics-hex-output" class="hidden" style="margin-top:15px;">
+                            <!-- Hex Toolbar -->
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:var(--bg-base); padding:10px 14px; border-radius:6px; border:1px solid var(--border-color); margin-bottom:12px;">
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <strong id="hex-file-title" style="font-size:13px; color:var(--primary-color);">-</strong>
+                                    <span id="hex-page-label" style="font-size:11px; color:var(--text-muted);">-</span>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <input type="text" id="hex-search-input" class="custom-input custom-input-sm" style="width:160px; font-size:11px;" placeholder="Search Hex / ASCII...">
+                                    <button class="btn btn-secondary btn-sm" onclick="prevHexPage()" style="padding:3px 10px; font-size:11px;">◀ Prev</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="nextHexPage()" style="padding:3px 10px; font-size:11px;">Next ▶</button>
+                                </div>
+                            </div>
+
+                            <!-- Hex Dump Viewer -->
+                            <div style="background:var(--bg-base); padding:15px; border-radius:6px; border:1px solid var(--border-color); overflow-x:auto;">
+                                <div style="display:flex; font-family:var(--font-mono); font-size:11px; color:var(--text-muted); border-bottom:1px solid var(--border-color); padding-bottom:6px; margin-bottom:8px; user-select:none;">
+                                    <span style="width:85px;">Offset</span>
+                                    <span style="width:360px; margin-right:15px;">00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F</span>
+                                    <span>Decoded Text</span>
+                                </div>
+                                <div id="hex-dump-container" style="max-height:400px; overflow-y:auto;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- About Me Section -->
                 <section id="about-me" class="tab-content">
                     <div class="grid-two-cols">
@@ -607,6 +2144,10 @@
                                     <div class="profile-detail-item">
                                         <span class="p-label">LinkedIn</span>
                                         <span class="p-value"><a href="https://www.linkedin.com/in/mohammad-zaghameem-0b01511b6/" target="_blank" class="p-link">View Profile</a></span>
+                                    </div>
+                                    <div class="profile-detail-item">
+                                        <span class="p-label">Portfolio</span>
+                                        <span class="p-value"><a href="https://mohammadzag.github.io/Portofolio/" target="_blank" class="p-link">View Portfolio</a></span>
                                     </div>
                                     <div class="profile-detail-item">
                                         <span class="p-label">Education</span>
@@ -640,9 +2181,34 @@
         </main>
     </div>
 
+    <!-- Interactive Chart Pop-up Modal -->
+    <div id="chart-popup-modal" class="modal-overlay hidden" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:99999; display:none; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; max-width:90vw; max-height:90vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);">
+            <div style="padding:16px 20px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; justify-content:space-between; gap:15px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <i data-lucide="bar-chart-2" style="color:#059669;"></i>
+                    <h3 id="chart-modal-title" style="margin:0; font-size:16px; font-weight:700; color:#0f172a;">Interactive Visualization Chart</h3>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <button id="btn-chart-modal-download" class="btn btn-primary btn-sm" style="background:#10b981; color:#ffffff; border:none; padding:6px 14px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;"><i data-lucide="download"></i> Download PNG</button>
+                    <button id="btn-chart-modal-close" class="btn btn-sm" style="background:#64748b; color:#ffffff; border:none; font-size:16px; line-height:1; padding:6px 10px; border-radius:6px; cursor:pointer;">✕</button>
+                </div>
+            </div>
+            <div style="padding:20px; flex:1; overflow:auto; display:flex; align-items:center; justify-content:center; background:#ffffff;">
+                <img id="chart-modal-img" src="" alt="Plot Chart" style="max-width:100%; max-height:75vh; object-fit:contain; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+            </div>
+        </div>
+    </div>
+
     <!-- Script imports -->
     <script src="crypto-js.js"></script>
     <script src="qrious.js"></script>
+    <script src="plotly.min.js"></script>
+    <script src="xlsx.full.min.js"></script>
+    <script src="analysis.js"></script>
+    <script src="malware.js"></script>
+    <script src="cpp_converter.js"></script>
+    <script src="forensics.js"></script>
     <script src="app.js"></script>
     <script>
         // Initialize Lucide Icons

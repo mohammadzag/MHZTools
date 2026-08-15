@@ -205,18 +205,46 @@ function md5(str) {
     return temp.toLowerCase();
 }
 
-// --- App Navigation and Core Setup ---
-document.addEventListener('DOMContentLoaded', () => {
+function initAppModule() {
+    // Prevent default drag and drop behavior across window so Electron allows file drops
+    window.addEventListener('dragover', (e) => e.preventDefault(), false);
+    window.addEventListener('drop', (e) => e.preventDefault(), false);
+
     setupTheme();
     setupNavigation();
     setupHashCalc();
+    setupHashCompare();
     setupPasswordGen();
     setupEncoderDecoder();
     setupSubnetCalc();
     setupEncrypter();
     setupLinkShaper();
     setupCopyButtons();
-});
+
+    // Listen for automatic Python & Libraries auto-install status
+    if (window.electronAPI && window.electronAPI.onPythonStatus) {
+        window.electronAPI.onPythonStatus((status) => {
+            const badge = document.getElementById('secure-context-badge');
+            if (badge) {
+                if (status.ready) {
+                    badge.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+                    badge.style.color = 'var(--success-color)';
+                    badge.textContent = '✓ PYTHON & ANALYTICS READY';
+                } else {
+                    badge.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+                    badge.style.color = 'var(--warning-color)';
+                    badge.textContent = '⚙️ ' + (status.message || 'CONFIGURING PYTHON...');
+                }
+            }
+        });
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAppModule);
+} else {
+    initAppModule();
+}
 
 // --- Theme Switcher (Dark / Light Mode) ---
 function setupTheme() {
@@ -228,14 +256,14 @@ function setupTheme() {
     if (savedTheme === 'light') {
         document.body.classList.add('light-theme');
         themeToggle.innerHTML = '<i data-lucide="moon"></i>';
-        lucide.createIcons();
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
     }
 
     themeToggle.addEventListener('click', () => {
         const isLight = document.body.classList.toggle('light-theme');
         localStorage.setItem('theme', isLight ? 'light' : 'dark');
         themeToggle.innerHTML = `<i data-lucide="${isLight ? 'moon' : 'sun'}"></i>`;
-        lucide.createIcons();
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
     });
 }
 
@@ -244,11 +272,24 @@ function setupNavigation() {
     const tabContents = document.querySelectorAll('.tab-content');
     const pageTitle = document.getElementById('page-title');
     const pageSubtitle = document.getElementById('page-subtitle');
+    
+    const encryptionGroup = document.getElementById('group-encryption');
+    const encryptionHeader = document.getElementById('header-encryption');
+    const analysisGroup = document.getElementById('group-analysis');
+    const analysisHeader = document.getElementById('header-analysis');
+    const malwareGroup = document.getElementById('group-malware');
+    const malwareHeader = document.getElementById('header-malware');
+    const forensicsGroup = document.getElementById('group-forensics');
+    const forensicsHeader = document.getElementById('header-forensics');
 
     const pageMeta = {
         'hash-calc': {
             title: 'Hash Calculator',
             subtitle: 'Generate cryptographic checksums for data integrity verification.'
+        },
+        'hash-compare': {
+            title: 'Hash Comparator & Verifier',
+            subtitle: 'Compare inputs side-by-side or verify files/texts against known checksums.'
         },
         'password-gen': {
             title: 'Password Generator & Analyzer',
@@ -270,11 +311,116 @@ function setupNavigation() {
             title: 'Link Shortener & Redirector',
             subtitle: 'Generate real short links via public APIs or build standalone offline redirect files.'
         },
+        'analysis-import': {
+            title: 'Dataset Import Studio',
+            subtitle: 'Upload spreadsheets or paste raw text to load your dataset.'
+        },
+        'analysis-preview': {
+            title: 'Data Explorer',
+            subtitle: 'Browse, search, and page through raw entries in your dataset.'
+        },
+        'analysis-cleaning': {
+            title: 'Data Cleaning Studio',
+            subtitle: 'Purge duplicates, manage blank values, normalize text, and impute/remedy anomalies.'
+        },
+        'analysis-stats': {
+            title: 'Summary Statistics',
+            subtitle: 'Explore numerical counts, averages, spreads, and quartiles.'
+        },
+        'analysis-chi': {
+            title: 'Chi-Square Independence Test',
+            subtitle: 'Analyze associations between categorical attributes.'
+        },
+        'analysis-charts': {
+            title: 'Visualisation Studio',
+            subtitle: 'Plot shaded distributions, box plots, heatmaps, scatter, bar, or line charts.'
+        },
+        'analysis-export': {
+            title: 'Export Results & Reports',
+            subtitle: 'Download your cleaned dataset and generate customized executive summaries.'
+        },
+        'malware-hash-calc': {
+            title: 'Malware Sample Hash Calculator',
+            subtitle: 'Compute cryptographic checksums and Shannon entropy for malware files.'
+        },
+        'malware-hash-compare': {
+            title: 'Threat Hash Verifier & Comparator',
+            subtitle: 'Compare malware samples or verify hashes against known threat intelligence IOC feeds.'
+        },
+        'malware-pe-inspector': {
+            title: 'PE Binary & Section Inspector',
+            subtitle: 'Inspect Windows PE headers, subsystem, architecture, and section entropy.'
+        },
+        'malware-doc-inspector': {
+            title: 'Document & PDF Static Analyst',
+            subtitle: 'Scan PDF stream objects and Office document VBA macros for embedded payloads.'
+        },
+        'malware-virustotal-clone': {
+            title: 'VirusTotal Threat Intelligence Center',
+            subtitle: 'Scan files or lookup hashes against a 70-Security-Vendor matrix and MITRE ATT&CK TTP framework.'
+        },
+        'cpp-arch-converter': {
+            title: 'C/C++ 64-Bit to 32-Bit Code Transformer',
+            subtitle: 'Convert 64-bit C/C++ source code to 32-bit architecture offline without compiler installation.'
+        },
+        'forensics-exif-metadata': {
+            title: 'EXIF & Media Metadata Forensics',
+            subtitle: 'Extract EXIF tags, camera hardware profiles, photo capture date, and GPS pinpoint coordinates.'
+        },
+        'forensics-hex-carver': {
+            title: 'Interactive Forensic Hex Inspector',
+            subtitle: 'Inspect byte-level raw hexadecimal streams with offset tracking and ASCII searching.'
+        },
         'about-me': {
             title: 'About Developer',
             subtitle: 'Professional background, academic history, and dedicated acknowledgements.'
+        },
+        'welcome': {
+            title: 'Welcome',
+            subtitle: 'Choose a tool from the sidebar to get started.'
         }
     };
+
+    // Toggle collapsible groups when headers are clicked & auto-select first tab
+    if (encryptionHeader && encryptionGroup) {
+        encryptionHeader.addEventListener('click', () => {
+            const isCollapsed = encryptionGroup.classList.toggle('collapsed');
+            if (!isCollapsed) {
+                const firstItem = encryptionGroup.querySelector('.nav-item');
+                if (firstItem) firstItem.click();
+            }
+        });
+    }
+    
+    if (analysisHeader && analysisGroup) {
+        analysisHeader.addEventListener('click', () => {
+            const isCollapsed = analysisGroup.classList.toggle('collapsed');
+            if (!isCollapsed) {
+                const firstItem = analysisGroup.querySelector('.nav-item');
+                if (firstItem) firstItem.click();
+            }
+        });
+    }
+
+    if (malwareHeader && malwareGroup) {
+        malwareHeader.addEventListener('click', () => {
+            const isCollapsed = malwareGroup.classList.toggle('collapsed');
+            if (!isCollapsed) {
+                const firstItem = malwareGroup.querySelector('.nav-item');
+                if (firstItem) firstItem.click();
+            }
+        });
+    }
+
+    if (forensicsHeader && forensicsGroup) {
+        forensicsHeader.addEventListener('click', () => {
+            const isCollapsed = forensicsGroup.classList.toggle('collapsed');
+            if (!isCollapsed) {
+                const firstItem = forensicsGroup.querySelector('.nav-item');
+                if (firstItem) firstItem.click();
+            }
+        });
+    }
 
     navItems.forEach(item => {
         item.addEventListener('click', () => {
@@ -292,11 +438,79 @@ function setupNavigation() {
                 }
             });
 
+            if (targetTab === 'cpp-arch-converter') {
+                if (typeof window._wireCppButtons === 'function') window._wireCppButtons();
+                if (typeof window.runCppTransformation === 'function') window.runCppTransformation();
+            }
+
+            // Adjust active group styling for Encryption group
+            if (encryptionGroup) {
+                if (item.closest('#group-encryption')) {
+                    encryptionGroup.classList.add('active-group');
+                } else {
+                    encryptionGroup.classList.remove('active-group');
+                }
+            }
+
+            // Adjust active group styling for Analysis group
+            if (analysisGroup) {
+                if (item.closest('#group-analysis')) {
+                    analysisGroup.classList.add('active-group');
+                } else {
+                    analysisGroup.classList.remove('active-group');
+                }
+            }
+
+            // Adjust active group styling for Malware group
+            if (malwareGroup) {
+                if (item.closest('#group-malware')) {
+                    malwareGroup.classList.add('active-group');
+                } else {
+                    malwareGroup.classList.remove('active-group');
+                }
+            }
+
+            // Adjust active group styling for Forensics group
+            if (forensicsGroup) {
+                if (item.closest('#group-forensics')) {
+                    forensicsGroup.classList.add('active-group');
+                } else {
+                    forensicsGroup.classList.remove('active-group');
+                }
+            }
+
             // Update title text
             if (pageMeta[targetTab]) {
                 pageTitle.textContent = pageMeta[targetTab].title;
                 pageSubtitle.textContent = pageMeta[targetTab].subtitle;
             }
+
+            // Trigger window resize event to force Plotly to refit its container size
+            if (targetTab === 'analysis-charts') {
+                setTimeout(() => {
+                    window.dispatchEvent(new Event('resize'));
+                }, 100);
+            }
+
+            // Lazy load statistics calculations only when viewing the statistics tab
+            if (targetTab === 'analysis-stats') {
+                if (typeof calculateSummaryStatistics === 'function') {
+                    calculateSummaryStatistics();
+                }
+            }
+        });
+    });
+
+    // Wire up "Go to Import Dataset" placeholder buttons
+    document.querySelectorAll('.btn-goto-import').forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Expand group if collapsed
+            if (analysisGroup && analysisGroup.classList.contains('collapsed')) {
+                analysisGroup.classList.remove('collapsed');
+            }
+            // Trigger click on import tab
+            const importTabBtn = document.querySelector('.nav-item[data-tab="analysis-import"]');
+            if (importTabBtn) importTabBtn.click();
         });
     });
 }
@@ -327,7 +541,7 @@ function setupHashCalc() {
         modeTextBtn.classList.remove('active');
         fileContainer.classList.remove('hidden');
         textContainer.classList.add('hidden');
-        lucide.createIcons(); // Refresh icons inside drop zone
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons(); // Refresh icons inside drop zone
     });
 
     // --- Text Mode ---
@@ -596,10 +810,10 @@ function setupHashCalc() {
             navigator.clipboard.writeText(value).then(() => {
                 const originalHTML = btn.innerHTML;
                 btn.innerHTML = `<i data-lucide="check" style="color: var(--success-color)"></i>`;
-                lucide.createIcons();
+                if (window.lucide && window.lucide.createIcons) lucide.createIcons();
                 setTimeout(() => {
                     btn.innerHTML = originalHTML;
-                    lucide.createIcons();
+                    if (window.lucide && window.lucide.createIcons) lucide.createIcons();
                 }, 2000);
             });
         });
@@ -666,7 +880,7 @@ function setupHashCalc() {
                         <i data-lucide="copy"></i>
                     </button>
                 `;
-                lucide.createIcons();
+                if (window.lucide && window.lucide.createIcons) lucide.createIcons();
                 setupCopyBtn(btnId, sha256Hash);
 
                 // Fill expanded detail hashes
@@ -675,7 +889,7 @@ function setupHashCalc() {
                 fillHashDetail(`file-hash-sha256-${index}`, `copy-sha256-${index}`, sha256Hash);
                 fillHashDetail(`file-hash-sha512-${index}`, `copy-sha512-${index}`, sha512Hash);
                 
-                lucide.createIcons();
+                if (window.lucide && window.lucide.createIcons) lucide.createIcons();
 
             } catch (err) {
                 statusEl.innerHTML = `<span class="file-status-badge error">Hash Failed</span>`;
@@ -1007,7 +1221,7 @@ function setupEncrypter() {
         subTabSymmetric.classList.remove('active');
         dhPanel.classList.remove('hidden');
         symmetricPanel.classList.add('hidden');
-        lucide.createIcons();
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
     });
 
     // Algo warning trigger for legacy DES/3DES
@@ -1018,14 +1232,14 @@ function setupEncrypter() {
         } else {
             warningBox.classList.add('hidden');
         }
-        lucide.createIcons();
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
     });
 
     toggleKeyBtn.addEventListener('click', () => {
         const isPassword = keyInput.type === 'password';
         keyInput.type = isPassword ? 'text' : 'password';
         toggleKeyBtn.innerHTML = `<i data-lucide="${isPassword ? 'eye-off' : 'eye'}"></i>`;
-        lucide.createIcons();
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
     });
 
     // Derive cryptographic key using PBKDF2 for AES-GCM
@@ -1287,7 +1501,7 @@ function setupEncrypter() {
             if (aliceSecret === bobSecret) {
                 dhSharedKeyVal.textContent = aliceSecret.toString(16).toUpperCase() + ` (Dec: ${aliceSecret.toString()})`;
                 dhMatchBanner.classList.remove('hidden');
-                lucide.createIcons();
+                if (window.lucide && window.lucide.createIcons) lucide.createIcons();
             } else {
                 dhMatchBanner.classList.add('hidden');
                 alert('Secrets do not match! Check modulo parameters or key values.');
@@ -1311,12 +1525,12 @@ function setupCopyButtons() {
                     btn.classList.add('copied');
                     const originalHTML = btn.innerHTML;
                     btn.innerHTML = `<i data-lucide="check"></i>`;
-                    lucide.createIcons();
+                    if (window.lucide && window.lucide.createIcons) lucide.createIcons();
                     
                     setTimeout(() => {
                         btn.classList.remove('copied');
                         btn.innerHTML = originalHTML;
-                        lucide.createIcons();
+                        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
                     }, 2000);
                 }).catch(err => {
                     console.error("Clipboard copy failed: ", err);
@@ -1454,4 +1668,546 @@ function setupLinkShaper() {
         }
     });
 }
+
+// --- Hash Comparator Implementation ---
+function setupHashCompare() {
+    // Mode Switching selectors
+    const modeTextBtn = document.getElementById('compare-mode-text');
+    const modeFileBtn = document.getElementById('compare-mode-file');
+    const modeVerifyBtn = document.getElementById('compare-mode-verify');
+
+    const containerText = document.getElementById('compare-text-container');
+    const containerFile = document.getElementById('compare-file-container');
+    const containerVerify = document.getElementById('compare-verify-container');
+
+    // Tab buttons activation
+    modeTextBtn.addEventListener('click', () => {
+        setActiveSubMode(modeTextBtn, containerText);
+    });
+    modeFileBtn.addEventListener('click', () => {
+        setActiveSubMode(modeFileBtn, containerFile);
+    });
+    modeVerifyBtn.addEventListener('click', () => {
+        setActiveSubMode(modeVerifyBtn, containerVerify);
+    });
+
+    function setActiveSubMode(activeBtn, activeContainer) {
+        [modeTextBtn, modeFileBtn, modeVerifyBtn].forEach(btn => btn.classList.remove('active'));
+        [containerText, containerFile, containerVerify].forEach(c => c.classList.add('hidden'));
+        
+        activeBtn.classList.add('active');
+        activeContainer.classList.remove('hidden');
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+    }
+
+    // Helper functions for hash calculation
+    async function generateSubtleHash(text, algorithm) {
+        try {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            const hashBuffer = await crypto.subtle.digest(algorithm, data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        } catch (e) {
+            return "Error";
+        }
+    }
+
+    // Common status icons
+    const okIcon = `<i data-lucide="check" class="match-icon-ok"></i>`;
+    const failIcon = `<i data-lucide="x" class="match-icon-fail"></i>`;
+
+    // ==========================================
+    // 1. Text vs Text Mode Logic
+    // ==========================================
+    const txtA = document.getElementById('compare-text-a');
+    const txtB = document.getElementById('compare-text-b');
+    const txtStatus = document.getElementById('compare-text-status');
+
+    const compTxtAMd5 = document.getElementById('comp-txt-a-md5');
+    const compTxtBMd5 = document.getElementById('comp-txt-b-md5');
+    const compTxtMatchMd5 = document.getElementById('comp-txt-match-md5');
+
+    const compTxtASha1 = document.getElementById('comp-txt-a-sha1');
+    const compTxtBSha1 = document.getElementById('comp-txt-b-sha1');
+    const compTxtMatchSha1 = document.getElementById('comp-txt-match-sha1');
+
+    const compTxtASha256 = document.getElementById('comp-txt-a-sha256');
+    const compTxtBSha256 = document.getElementById('comp-txt-b-sha256');
+    const compTxtMatchSha256 = document.getElementById('comp-txt-match-sha256');
+
+    const compTxtASha512 = document.getElementById('comp-txt-a-sha512');
+    const compTxtBSha512 = document.getElementById('comp-txt-b-sha512');
+    const compTxtMatchSha512 = document.getElementById('comp-txt-match-sha512');
+
+    async function updateTextComparison() {
+        const valA = txtA.value;
+        const valB = txtB.value;
+
+        if (!valA && !valB) {
+            // Reset table
+            const cells = [compTxtAMd5, compTxtBMd5, compTxtMatchMd5, compTxtASha1, compTxtBSha1, compTxtMatchSha1, compTxtASha256, compTxtBSha256, compTxtMatchSha256, compTxtASha512, compTxtBSha512, compTxtMatchSha512];
+            cells.forEach(c => { if (c) c.textContent = '-'; });
+            txtStatus.className = 'compare-status-banner hidden';
+            txtStatus.innerHTML = '';
+            return;
+        }
+
+        // Calculate A hashes
+        const md5A = md5(valA);
+        const sha1A = await generateSubtleHash(valA, 'SHA-1');
+        const sha256A = await generateSubtleHash(valA, 'SHA-256');
+        const sha512A = await generateSubtleHash(valA, 'SHA-512');
+
+        // Calculate B hashes
+        const md5B = md5(valB);
+        const sha1B = await generateSubtleHash(valB, 'SHA-1');
+        const sha256B = await generateSubtleHash(valB, 'SHA-256');
+        const sha512B = await generateSubtleHash(valB, 'SHA-512');
+
+        // Display A hashes
+        compTxtAMd5.textContent = md5A;
+        compTxtASha1.textContent = sha1A;
+        compTxtASha256.textContent = sha256A;
+        compTxtASha512.textContent = sha512A;
+
+        // Display B hashes
+        compTxtBMd5.textContent = md5B;
+        compTxtBSha1.textContent = sha1B;
+        compTxtBSha256.textContent = sha256B;
+        compTxtBSha512.textContent = sha512B;
+
+        // Check matches
+        const matches = {
+            md5: md5A === md5B,
+            sha1: sha1A === sha1B,
+            sha256: sha256A === sha256B,
+            sha512: sha512A === sha512B
+        };
+
+        compTxtMatchMd5.innerHTML = matches.md5 ? okIcon : failIcon;
+        compTxtMatchSha1.innerHTML = matches.sha1 ? okIcon : failIcon;
+        compTxtMatchSha256.innerHTML = matches.sha256 ? okIcon : failIcon;
+        compTxtMatchSha512.innerHTML = matches.sha512 ? okIcon : failIcon;
+
+        // Highlight matching table rows
+        toggleRowHighlight('compare-text-row-md5', matches.md5);
+        toggleRowHighlight('compare-text-row-sha1', matches.sha1);
+        toggleRowHighlight('compare-text-row-sha256', matches.sha256);
+        toggleRowHighlight('compare-text-row-sha512', matches.sha512);
+
+        // Overall status banner
+        txtStatus.classList.remove('hidden');
+        if (valA === valB) {
+            txtStatus.className = 'compare-status-banner match';
+            txtStatus.innerHTML = `<i data-lucide="shield-check"></i> <span>Perfect Match! The input texts are identical character-for-character.</span>`;
+        } else {
+            txtStatus.className = 'compare-status-banner mismatch';
+            txtStatus.innerHTML = `<i data-lucide="shield-alert"></i> <span>Mismatch! The input texts are different.</span>`;
+        }
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+    }
+
+    function toggleRowHighlight(rowId, shouldHighlight) {
+        const row = document.getElementById(rowId);
+        if (!row) return;
+        if (shouldHighlight) {
+            row.classList.add('highlight-row');
+        } else {
+            row.classList.remove('highlight-row');
+        }
+    }
+
+    txtA.addEventListener('input', updateTextComparison);
+    txtB.addEventListener('input', updateTextComparison);
+
+    // ==========================================
+    // 2. File vs File Mode Logic
+    // ==========================================
+    const dropZoneCompA = document.getElementById('drop-zone-comp-a');
+    const dropZoneCompB = document.getElementById('drop-zone-comp-b');
+    const compFileAInput = document.getElementById('comp-file-a-input');
+    const compFileBInput = document.getElementById('comp-file-b-input');
+
+    const compFileAName = document.getElementById('comp-file-a-name');
+    const compFileBName = document.getElementById('comp-file-b-name');
+
+    const progressContainerA = document.getElementById('comp-file-a-progress-container');
+    const progressContainerB = document.getElementById('comp-file-b-progress-container');
+    const progressBarA = document.getElementById('comp-file-a-progress');
+    const progressBarB = document.getElementById('comp-file-b-progress');
+
+    const compFileAMd5 = document.getElementById('comp-file-a-md5');
+    const compFileBMd5 = document.getElementById('comp-file-b-md5');
+    const compFileMatchMd5 = document.getElementById('comp-file-match-md5');
+
+    const compFileASha1 = document.getElementById('comp-file-a-sha1');
+    const compFileBSha1 = document.getElementById('comp-file-b-sha1');
+    const compFileMatchSha1 = document.getElementById('comp-file-match-sha1');
+
+    const compFileASha256 = document.getElementById('comp-file-a-sha256');
+    const compFileBSha256 = document.getElementById('comp-file-b-sha256');
+    const compFileMatchSha256 = document.getElementById('comp-file-match-sha256');
+
+    const compFileASha512 = document.getElementById('comp-file-a-sha512');
+    const compFileBSha512 = document.getElementById('comp-file-b-sha512');
+    const compFileMatchSha512 = document.getElementById('comp-file-match-sha512');
+
+    const fileStatus = document.getElementById('compare-file-status');
+
+    let hashesFileA = null;
+    let hashesFileB = null;
+
+    // Trigger select dialogs
+    dropZoneCompA.addEventListener('click', () => compFileAInput.click());
+    dropZoneCompB.addEventListener('click', () => compFileBInput.click());
+
+    // Drag-over styling
+    [dropZoneCompA, dropZoneCompB].forEach(zone => {
+        ['dragenter', 'dragover'].forEach(eventName => {
+            zone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                zone.classList.add('dragover');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            zone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                zone.classList.remove('dragover');
+            }, false);
+        });
+    });
+
+    dropZoneCompA.addEventListener('drop', (e) => {
+        const file = e.dataTransfer.files[0];
+        if (file) handleFileSelection(file, 'A');
+    });
+
+    dropZoneCompB.addEventListener('drop', (e) => {
+        const file = e.dataTransfer.files[0];
+        if (file) handleFileSelection(file, 'B');
+    });
+
+    compFileAInput.addEventListener('change', () => {
+        const file = compFileAInput.files[0];
+        if (file) handleFileSelection(file, 'A');
+    });
+
+    compFileBInput.addEventListener('change', () => {
+        const file = compFileBInput.files[0];
+        if (file) handleFileSelection(file, 'B');
+    });
+
+    function handleFileSelection(file, target) {
+        const nameEl = target === 'A' ? compFileAName : compFileBName;
+        const progressCont = target === 'A' ? progressContainerA : progressContainerB;
+        const progBar = target === 'A' ? progressBarA : progressBarB;
+
+        nameEl.innerHTML = `<strong>${file.name}</strong><br><span style="font-size:11px; opacity:0.8;">(${formatBytes(file.size)})</span>`;
+        progressCont.classList.remove('hidden');
+        progBar.style.width = '0%';
+
+        const reader = new FileReader();
+        reader.onprogress = (e) => {
+            if (e.lengthComputable) {
+                const percentage = Math.round((e.loaded / e.total) * 100);
+                progBar.style.width = `${percentage}%`;
+            }
+        };
+
+        reader.onload = async (e) => {
+            try {
+                const buffer = e.target.result;
+                const uint8 = new Uint8Array(buffer);
+                
+                // Calculate
+                const md5Val = md5(uint8);
+                const sha1Val = await crypto.subtle.digest('SHA-1', buffer).then(buf => Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join(''));
+                const sha256Val = await crypto.subtle.digest('SHA-256', buffer).then(buf => Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join(''));
+                const sha512Val = await crypto.subtle.digest('SHA-512', buffer).then(buf => Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join(''));
+
+                const results = { md5: md5Val, sha1: sha1Val, sha256: sha256Val, sha512: sha512Val };
+
+                if (target === 'A') {
+                    hashesFileA = results;
+                    compFileAMd5.textContent = md5Val;
+                    compFileASha1.textContent = sha1Val;
+                    compFileASha256.textContent = sha256Val;
+                    compFileASha512.textContent = sha512Val;
+                } else {
+                    hashesFileB = results;
+                    compFileBMd5.textContent = md5Val;
+                    compFileBSha1.textContent = sha1Val;
+                    compFileBSha256.textContent = sha256Val;
+                    compFileBSha512.textContent = sha512Val;
+                }
+
+                progressCont.classList.add('hidden');
+                checkFileComparison();
+
+            } catch (err) {
+                console.error(err);
+                nameEl.textContent = "Error hashing file!";
+            }
+        };
+
+        reader.readAsArrayBuffer(file);
+    }
+
+    function checkFileComparison() {
+        if (!hashesFileA || !hashesFileB) return;
+
+        const matches = {
+            md5: hashesFileA.md5 === hashesFileB.md5,
+            sha1: hashesFileA.sha1 === hashesFileB.sha1,
+            sha256: hashesFileA.sha256 === hashesFileB.sha256,
+            sha512: hashesFileA.sha512 === hashesFileB.sha512
+        };
+
+        compFileMatchMd5.innerHTML = matches.md5 ? okIcon : failIcon;
+        compFileMatchSha1.innerHTML = matches.sha1 ? okIcon : failIcon;
+        compFileMatchSha256.innerHTML = matches.sha256 ? okIcon : failIcon;
+        compFileMatchSha512.innerHTML = matches.sha512 ? okIcon : failIcon;
+
+        toggleRowHighlight('compare-file-row-md5', matches.md5);
+        toggleRowHighlight('compare-file-row-sha1', matches.sha1);
+        toggleRowHighlight('compare-file-row-sha256', matches.sha256);
+        toggleRowHighlight('compare-file-row-sha512', matches.sha512);
+
+        fileStatus.classList.remove('hidden');
+        if (matches.sha256) {
+            fileStatus.className = 'compare-status-banner match';
+            fileStatus.innerHTML = `<i data-lucide="shield-check"></i> <span>Perfect Match! The files are cryptographically identical (SHA-256 matches).</span>`;
+        } else {
+            fileStatus.className = 'compare-status-banner mismatch';
+            fileStatus.innerHTML = `<i data-lucide="shield-alert"></i> <span>Mismatch! The files have different checksums.</span>`;
+        }
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+    }
+
+    // ==========================================
+    // 3. Verify Hash Mode Logic (Pasted Hash vs Input)
+    // ==========================================
+    const verifySrcTextBtn = document.getElementById('verify-src-mode-text');
+    const verifySrcFileBtn = document.getElementById('verify-src-mode-file');
+    const verifySrcTextWrapper = document.getElementById('verify-src-text-wrapper');
+    const verifySrcFileWrapper = document.getElementById('verify-src-file-wrapper');
+
+    const verifySrcText = document.getElementById('verify-src-text');
+    const dropZoneVerifyFile = document.getElementById('drop-zone-verify-file');
+    const verifyFileInput = document.getElementById('verify-file-input');
+    const verifyFileName = document.getElementById('verify-file-name');
+    const verifyFileProgressContainer = document.getElementById('verify-file-progress-container');
+    const verifyFileProgress = document.getElementById('verify-file-progress');
+
+    const verifyTargetHash = document.getElementById('verify-target-hash');
+    const verifyDetection = document.getElementById('verify-hash-detection');
+    const verifyStatusBanner = document.getElementById('verify-status-banner');
+
+    const verifyCalcMd5 = document.getElementById('verify-calc-md5');
+    const verifyCalcSha1 = document.getElementById('verify-calc-sha1');
+    const verifyCalcSha256 = document.getElementById('verify-calc-sha256');
+    const verifyCalcSha512 = document.getElementById('verify-calc-sha512');
+
+    const verifyMatchMd5 = document.getElementById('verify-match-md5');
+    const verifyMatchSha1 = document.getElementById('verify-match-sha1');
+    const verifyMatchSha256 = document.getElementById('verify-match-sha256');
+    const verifyMatchSha512 = document.getElementById('verify-match-sha512');
+
+    let currentSourceHashes = null;
+    let verifySourceMode = 'text'; // or 'file'
+
+    // Source Mode Toggle
+    verifySrcTextBtn.addEventListener('click', () => {
+        verifySourceMode = 'text';
+        verifySrcTextBtn.classList.add('active');
+        verifySrcFileBtn.classList.remove('active');
+        verifySrcTextWrapper.classList.remove('hidden');
+        verifySrcFileWrapper.classList.add('hidden');
+        calculateVerifySource();
+    });
+
+    verifySrcFileBtn.addEventListener('click', () => {
+        verifySourceMode = 'file';
+        verifySrcFileBtn.classList.add('active');
+        verifySrcTextBtn.classList.remove('active');
+        verifySrcFileWrapper.classList.remove('hidden');
+        verifySrcTextWrapper.classList.add('hidden');
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+        calculateVerifySource();
+    });
+
+    // File Drag-Drop & Input
+    dropZoneVerifyFile.addEventListener('click', () => verifyFileInput.click());
+
+    dropZoneVerifyFile.addEventListener('dragenter', (e) => { e.preventDefault(); dropZoneVerifyFile.classList.add('dragover'); });
+    dropZoneVerifyFile.addEventListener('dragover', (e) => { e.preventDefault(); dropZoneVerifyFile.classList.add('dragover'); });
+    dropZoneVerifyFile.addEventListener('dragleave', () => dropZoneVerifyFile.classList.remove('dragover'));
+    dropZoneVerifyFile.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZoneVerifyFile.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file) handleVerifyFileSelection(file);
+    });
+
+    verifyFileInput.addEventListener('change', () => {
+        const file = verifyFileInput.files[0];
+        if (file) handleVerifyFileSelection(file);
+    });
+
+    function handleVerifyFileSelection(file) {
+        verifyFileName.innerHTML = `<strong>${file.name}</strong><br><span style="font-size:11px; opacity:0.8;">(${formatBytes(file.size)})</span>`;
+        verifyFileProgressContainer.classList.remove('hidden');
+        verifyFileProgress.style.width = '0%';
+
+        const reader = new FileReader();
+        reader.onprogress = (e) => {
+            if (e.lengthComputable) {
+                const percentage = Math.round((e.loaded / e.total) * 100);
+                verifyFileProgress.style.width = `${percentage}%`;
+            }
+        };
+
+        reader.onload = async (e) => {
+            try {
+                const buffer = e.target.result;
+                const uint8 = new Uint8Array(buffer);
+
+                const md5Val = md5(uint8);
+                const sha1Val = await crypto.subtle.digest('SHA-1', buffer).then(buf => Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join(''));
+                const sha256Val = await crypto.subtle.digest('SHA-256', buffer).then(buf => Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join(''));
+                const sha512Val = await crypto.subtle.digest('SHA-512', buffer).then(buf => Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join(''));
+
+                currentSourceHashes = { md5: md5Val, sha1: sha1Val, sha256: sha256Val, sha512: sha512Val };
+
+                // Display
+                verifyCalcMd5.textContent = md5Val;
+                verifyCalcSha1.textContent = sha1Val;
+                verifyCalcSha256.textContent = sha256Val;
+                verifyCalcSha512.textContent = sha512Val;
+
+                verifyFileProgressContainer.classList.add('hidden');
+                performVerification();
+
+            } catch (err) {
+                console.error(err);
+                verifyFileName.textContent = "Error hashing file!";
+            }
+        };
+
+        reader.readAsArrayBuffer(file);
+    }
+
+    async function calculateVerifySource() {
+        if (verifySourceMode === 'text') {
+            const val = verifySrcText.value;
+            if (!val) {
+                currentSourceHashes = null;
+                const cells = [verifyCalcMd5, verifyCalcSha1, verifyCalcSha256, verifyCalcSha512, verifyMatchMd5, verifyMatchSha1, verifyMatchSha256, verifyMatchSha512];
+                cells.forEach(c => { if (c) c.textContent = '-'; });
+                verifyStatusBanner.className = 'compare-status-banner hidden';
+                verifyStatusBanner.innerHTML = '';
+                return;
+            }
+
+            const md5Val = md5(val);
+            const sha1Val = await generateSubtleHash(val, 'SHA-1');
+            const sha256Val = await generateSubtleHash(val, 'SHA-256');
+            const sha512Val = await generateSubtleHash(val, 'SHA-512');
+
+            currentSourceHashes = { md5: md5Val, sha1: sha1Val, sha256: sha256Val, sha512: sha512Val };
+
+            verifyCalcMd5.textContent = md5Val;
+            verifyCalcSha1.textContent = sha1Val;
+            verifyCalcSha256.textContent = sha256Val;
+            verifyCalcSha512.textContent = sha512Val;
+
+            performVerification();
+        } else {
+            // Handled when file is loaded
+            if (!currentSourceHashes) {
+                const cells = [verifyCalcMd5, verifyCalcSha1, verifyCalcSha256, verifyCalcSha512, verifyMatchMd5, verifyMatchSha1, verifyMatchSha256, verifyMatchSha512];
+                cells.forEach(c => { if (c) c.textContent = '-'; });
+            }
+        }
+    }
+
+    verifySrcText.addEventListener('input', calculateVerifySource);
+    verifyTargetHash.addEventListener('input', performVerification);
+
+    function performVerification() {
+        const target = verifyTargetHash.value.trim().toLowerCase();
+        
+        if (!target) {
+            verifyDetection.innerHTML = 'Detected type: <strong>None</strong>';
+            verifyStatusBanner.className = 'compare-status-banner hidden';
+            [verifyMatchMd5, verifyMatchSha1, verifyMatchSha256, verifyMatchSha512].forEach(m => m.textContent = '-');
+            ['verify-row-md5', 'verify-row-sha1', 'verify-row-sha256', 'verify-row-sha512'].forEach(r => toggleRowHighlight(r, false));
+            return;
+        }
+
+        // Auto-detect algorithm based on length
+        let algo = 'unknown';
+        if (target.length === 32 && /^[0-9a-f]+$/i.test(target)) algo = 'MD5';
+        else if (target.length === 40 && /^[0-9a-f]+$/i.test(target)) algo = 'SHA-1';
+        else if (target.length === 64 && /^[0-9a-f]+$/i.test(target)) algo = 'SHA-256';
+        else if (target.length === 128 && /^[0-9a-f]+$/i.test(target)) algo = 'SHA-512';
+
+        verifyDetection.innerHTML = `Detected type: <strong style="color: var(--primary-color); text-shadow: 0 0 5px var(--primary-glow);">${algo.toUpperCase()}</strong>`;
+
+        if (!currentSourceHashes) {
+            [verifyMatchMd5, verifyMatchSha1, verifyMatchSha256, verifyMatchSha512].forEach(m => m.textContent = '-');
+            return;
+        }
+
+        // Perform matches
+        const matches = {
+            md5: algo === 'MD5' && currentSourceHashes.md5 === target,
+            sha1: algo === 'SHA-1' && currentSourceHashes.sha1 === target,
+            sha256: algo === 'SHA-256' && currentSourceHashes.sha256 === target,
+            sha512: algo === 'SHA-512' && currentSourceHashes.sha512 === target
+        };
+
+        verifyMatchMd5.innerHTML = algo === 'MD5' ? (matches.md5 ? okIcon : failIcon) : '-';
+        verifyMatchSha1.innerHTML = algo === 'SHA-1' ? (matches.sha1 ? okIcon : failIcon) : '-';
+        verifyMatchSha256.innerHTML = algo === 'SHA-256' ? (matches.sha256 ? okIcon : failIcon) : '-';
+        verifyMatchSha512.innerHTML = algo === 'SHA-512' ? (matches.sha512 ? okIcon : failIcon) : '-';
+
+        toggleRowHighlight('verify-row-md5', matches.md5);
+        toggleRowHighlight('verify-row-sha1', matches.sha1);
+        toggleRowHighlight('verify-row-sha256', matches.sha256);
+        toggleRowHighlight('verify-row-sha512', matches.sha512);
+
+        // Overall status banner
+        const isMatched = matches.md5 || matches.sha1 || matches.sha256 || matches.sha512;
+        verifyStatusBanner.classList.remove('hidden');
+        if (isMatched) {
+            verifyStatusBanner.className = 'compare-status-banner match';
+            verifyStatusBanner.innerHTML = `<i data-lucide="shield-check"></i> <span>Verification Succeeded! The source matches the target checksum (${algo}).</span>`;
+        } else {
+            verifyStatusBanner.className = 'compare-status-banner mismatch';
+            if (algo === 'unknown') {
+                verifyStatusBanner.className = 'compare-status-banner pending';
+                verifyStatusBanner.innerHTML = `<i data-lucide="info"></i> <span>Invalid or unrecognized checksum length (${target.length} chars).</span>`;
+            } else {
+                verifyStatusBanner.innerHTML = `<i data-lucide="shield-alert"></i> <span>Verification Failed! The source calculated ${algo} does not match the target checksum.</span>`;
+            }
+        }
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+    }
+
+    // Helper for size display
+    function formatBytes(bytes, decimals = 2) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+}
+
 

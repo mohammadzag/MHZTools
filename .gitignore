@@ -1,15 +1,24 @@
 # Node modules
 node_modules/
 
-# Production builds (Electron portable executables)
+# Production builds & Portable executables
 dist/
 out/
+build/
 
-# Log files
+# Python cache & compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Electron / NPM logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
 
-# System files
+# Operating system files
 .DS_Store
 Thumbs.db
+desktop.ini

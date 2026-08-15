@@ -1,7 +1,7 @@
 {
   "name": "mhz-tools",
-  "version": "1.0.0",
-  "description": "MHZ Tools Security Utility Suite",
+  "version": "2.0.0",
+  "description": "MHZ Tools 2.0 - Security, Cryptography, Data Analysis, Malware Static Analysis, C/C++ Architecture Converter, and Digital Forensics Suite",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -10,22 +10,46 @@
   "keywords": [
     "security",
     "cryptography",
+    "malware-analysis",
+    "digital-forensics",
+    "data-analysis",
+    "cpp-converter",
     "utilities"
   ],
-  "author": "MHZ",
+  "author": "Mohammad Hussain Alzaghameem",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^43.2.0",
+    "electron": "^22.3.25",
     "electron-builder": "^26.15.3",
     "electron-packager": "^17.1.2"
   },
   "build": {
     "appId": "com.mhz.tools",
-    "productName": "MHZTools",
+    "productName": "MHZTools 2.0",
     "win": {
       "target": [
-        "portable"
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
       ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "MHZ Tools"
     },
     "directories": {
       "output": "dist"
@@ -34,15 +58,30 @@
       "index.html",
       "styles.css",
       "app.js",
+      "analysis.js",
       "main.js",
+      "preload.js",
+      "analysis.py",
       "crypto-js.js",
+      "plotly.min.js",
+      "xlsx.full.min.js",
       "profile_avatar.jpg",
-      "qrious.js"
+      "qrious.js",
+      "malware.js",
+      "lucide.min.js",
+      "cpp_converter.js",
+      "forensics.js"
     ],
-    "asar": true
+    "asar": true,
+    "asarUnpack": [
+      "analysis.py",
+      "plotly.min.js"
+    ]
   },
   "dependencies": {
     "crypto-js": "^4.2.0",
-    "qrious": "^4.0.2"
+    "plotly.js-dist-min": "^3.7.0",
+    "qrious": "^4.0.2",
+    "xlsx": "^0.18.5"
   }
 }
