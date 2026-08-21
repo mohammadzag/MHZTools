@@ -5,7 +5,10 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "package": "electron-builder"
+    "package": "electron-builder",
+    "package:win": "electron-builder --win",
+    "package:linux": "electron-builder --linux",
+    "package:all": "electron-builder --win --linux"
   },
   "keywords": [
     "security",
@@ -16,7 +19,11 @@
     "cpp-converter",
     "utilities"
   ],
-  "author": "Mohammad Hussain Alzaghameem",
+  "author": {
+    "name": "Mohammad Hussain Alzaghameem",
+    "email": "mohzag615@gmail.com",
+    "url": "https://mohammadzag.github.io/Portofolio/"
+  },
   "license": "ISC",
   "devDependencies": {
     "electron": "^22.3.25",
@@ -43,6 +50,32 @@
           ]
         }
       ]
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "tar.gz",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "dir",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "category": "Utility",
+      "synopsis": "MHZ Tools 2.0 - Security, Data Analysis & Digital Forensics Suite",
+      "description": "Comprehensive client-side security, cryptography, data analysis, malware static analysis, C/C++ architecture conversion, and digital forensics suite.",
+      "executableName": "mhztools"
     },
     "nsis": {
       "oneClick": false,

@@ -112,13 +112,31 @@ npm start
 ```
 
 ### 4. Build Production Executables
-To build both the **Windows Setup Installer (`.exe`)** and the **Standalone Portable Executable (`.exe`)**:
+
+#### Windows (Setup Installer & Portable .exe):
 ```bash
-npm run package
+npm run package:win
 ```
-Output binaries will be generated inside the `dist/` directory:
-- `dist/MHZTools Setup 2.0.0.exe` (NSIS Installer)
-- `dist/MHZTools 2.0.0.exe` (Single-file Portable)
+Output binaries in `dist/`:
+- `dist/MHZTools 2.0 Setup 2.0.0.exe` (NSIS Windows Installer)
+- `dist/MHZTools 2.0 2.0.0.exe` (Standalone Portable Executable)
+
+#### Linux (Universal .tar.gz, .zip & Binaries):
+```bash
+npm run package:linux
+```
+Output packages in `dist/`:
+- `dist/mhz-tools-2.0.0.tar.gz` (Universal Linux Tarball)
+- `dist/mhz-tools-2.0.0.zip` (Universal Linux Zip)
+- `dist/linux-unpacked/` (Pre-extracted portable directory)
+
+To run on any 64-bit Linux system:
+```bash
+tar -xzf mhz-tools-2.0.0.tar.gz
+cd linux-unpacked
+chmod +x mhztools
+./mhztools
+```
 
 ---
 
@@ -135,8 +153,8 @@ Output binaries will be generated inside the `dist/` directory:
 
 ## 🎓 Dedicated Acknowledgements
 
-### Special Thanks to Dr. Yazan Alsariera
-I would like to express my deepest gratitude to **Dr. Yazan Alsariera** for his exceptional mentorship, encouragement, and guidance throughout my academic and cybersecurity journey. His passion and insights have been instrumental in shaping this project and my professional career.
+### Special Thanks to All Doctors in the IT Department
+I would like to express my deepest gratitude and sincere appreciation to **all doctors, professors, and faculty members in the Information Technology (IT) Department**. Thank you for your exceptional guidance, continuous support, dedication, and mentorship throughout my academic and technical journey.
 
 ### Acknowledgement to Tafilah Technical University
 I am proud to be a graduate of **Tafilah Technical University (TTU)**. I extend my sincere appreciation to the distinguished faculty, professors, and doctors who supported my education and fueled my passion for computer science and cybersecurity.

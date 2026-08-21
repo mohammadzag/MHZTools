@@ -351,7 +351,7 @@ function downloadChart() {
 });
 
 // ==========================================
-// UNIVERSAL PYTHON DETECTOR & AUTO-INSTALLER (Win 7/10/11)
+// UNIVERSAL PYTHON DETECTOR & AUTO-INSTALLER (Linux & Windows)
 // ==========================================
 
 function isRealPython(cmd) {
@@ -374,12 +374,27 @@ async function checkAndPreparePythonEnvironment(win) {
         }
     }
 
+    const isLinux = process.platform === 'linux';
+    const isMac = process.platform === 'darwin';
+
     const localAppData = process.env.LOCALAPPDATA || path.join(process.env.USERPROFILE || 'C:\\Users\\Default', 'AppData', 'Local');
     const programFiles = process.env.ProgramFiles || 'C:\\Program Files';
     const programFilesX86 = process.env['ProgramFiles(x86)'] || 'C:\\Program Files (x86)';
 
-    // Candidate locations for Python on Windows 7/10/11
-    const candidatePaths = [
+    // Candidate locations for Python on Linux, macOS, and Windows
+    const candidatePaths = isLinux ? [
+        'python3',
+        'python',
+        '/usr/bin/python3',
+        '/usr/local/bin/python3',
+        '/usr/bin/python',
+        '/bin/python3'
+    ] : (isMac ? [
+        'python3',
+        '/usr/local/bin/python3',
+        '/opt/homebrew/bin/python3',
+        'python'
+    ] : [
         'python',
         'py -3',
         'py',
@@ -393,18 +408,27 @@ async function checkAndPreparePythonEnvironment(win) {
         'C:\\Python38\\python.exe',
         'C:\\Python310\\python.exe',
         'C:\\Python27\\python.exe'
-    ];
+    ]);
 
     for (const cand of candidatePaths) {
-        if (isRealPython(cand.includes(' ') && !cand.startsWith('py') ? `"${cand}"` : cand)) {
-            pythonExecutable = cand.includes(' ') && !cand.startsWith('py') ? `"${cand}"` : cand;
+        const testCmd = cand.includes(' ') && !cand.startsWith('py') ? `"${cand}"` : cand;
+        if (isRealPython(testCmd)) {
+            pythonExecutable = testCmd;
             notify({ ready: true, message: 'Python environment detected' });
             ensurePythonPackages(pythonExecutable, notify);
             return;
         }
     }
 
-    // If Python is NOT installed on the device, download & run silent installer (Python 3.8.10 for Win7/10/11)
+    if (isLinux) {
+        notify({
+            ready: false,
+            error: 'Python 3 not detected. Please install on Linux via: sudo apt install python3 python3-pip python3-pandas python3-scipy python3-matplotlib (or equivalent for your distro).'
+        });
+        return;
+    }
+
+    // Windows automatic installer
     notify({ ready: false, message: 'Python not found. Auto-installing Python 3.8 runtime & required libraries...' });
 
     try {
@@ -498,11 +522,29 @@ function isRealGcc(cmd) {
 }
 
 function findGccCompiler() {
+    const isLinux = process.platform === 'linux';
+    const isMac = process.platform === 'darwin';
+
     const localAppData = process.env.LOCALAPPDATA || path.join(process.env.USERPROFILE || 'C:\\Users\\Default', 'AppData', 'Local');
     const programFiles = process.env.ProgramFiles || 'C:\\Program Files';
     const programFilesX86 = process.env['ProgramFiles(x86)'] || 'C:\\Program Files (x86)';
 
-    const candidateGccPaths = [
+    const candidateGccPaths = isLinux ? [
+        'gcc',
+        'g++',
+        '/usr/bin/gcc',
+        '/usr/bin/g++',
+        '/usr/bin/i686-linux-gnu-gcc',
+        '/usr/local/bin/gcc',
+        '/usr/local/bin/g++',
+        'clang'
+    ] : (isMac ? [
+        'gcc',
+        'clang',
+        '/usr/bin/gcc',
+        '/usr/bin/clang',
+        '/opt/homebrew/bin/gcc'
+    ] : [
         'gcc',
         'i686-w64-mingw32-gcc',
         'x86_64-w64-mingw32-gcc',
@@ -517,7 +559,7 @@ function findGccCompiler() {
         path.join(localAppData, 'MHZTools', 'gcc', 'bin', 'gcc.exe'),
         path.join(programFiles, 'MinGW', 'bin', 'gcc.exe'),
         path.join(programFilesX86, 'MinGW', 'bin', 'gcc.exe')
-    ];
+    ]);
 
     for (const cand of candidateGccPaths) {
         const testCmd = cand.includes(' ') && !cand.startsWith('"') ? `"${cand}"` : cand;
@@ -528,8 +570,8 @@ function findGccCompiler() {
                 if (fs.existsSync(gxxCand)) {
                     gxxExecutable = gxxCand.includes(' ') ? `"${gxxCand}"` : gxxCand;
                 }
-            } else if (cand === 'gcc') {
-                gxxExecutable = 'g++';
+            } else if (cand === 'gcc' || cand === '/usr/bin/gcc') {
+                gxxExecutable = cand.replace(/gcc$/, 'g++');
             }
             try {
                 gccVersionInfo = execSync(`${gccExecutable} --version`, { encoding: 'utf8', timeout: 5000 }).split('\n')[0].trim();
@@ -551,6 +593,14 @@ async function checkAndPrepareGccEnvironment(win) {
 
     if (findGccCompiler()) {
         notify({ ready: true, message: `GCC Toolchain Ready: ${gccVersionInfo} (32-Bit x86 Target Supported)` });
+        return;
+    }
+
+    if (process.platform === 'linux') {
+        notify({
+            ready: false,
+            error: 'GCC compiler not detected. On Linux, please install via: sudo apt install build-essential gcc-multilib g++-multilib (or equivalent for your distro).'
+        });
         return;
     }
 
