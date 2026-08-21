@@ -153,11 +153,8 @@ chmod +x mhztools
 
 ## 🎓 Dedicated Acknowledgements
 
-### Special Thanks to All Doctors in the IT Department
-I would like to express my deepest gratitude and sincere appreciation to **all doctors, professors, and faculty members in the Information Technology (IT) Department**. Thank you for your exceptional guidance, continuous support, dedication, and mentorship throughout my academic and technical journey.
-
-### Acknowledgement to Tafilah Technical University
-I am proud to be a graduate of **Tafilah Technical University (TTU)**. I extend my sincere appreciation to the distinguished faculty, professors, and doctors who supported my education and fueled my passion for computer science and cybersecurity.
+### Special Thanks to Dr. Yazan Alsariera
+I would like to express my deepest gratitude to **Dr. Yazan Alsariera** for his exceptional mentorship, encouragement, and guidance throughout my academic and cybersecurity journey. His passion and insights have been instrumental in shaping this project and my professional career.
 
 ---
 
