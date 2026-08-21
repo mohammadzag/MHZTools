@@ -84,25 +84,29 @@ chmod +x "$INSTALL_DIR/mhztools"
 
 echo -e "\${BLUE}[4/5] Creating application shortcuts & menu launcher...\${RESET}"
 
-# Create terminal launcher script with --no-sandbox flag
-cat << 'EOF_LAUNCHER' > "$BIN_DIR/mhztools"
+# Create terminal launcher script with absolute path and --no-sandbox flag
+cat << EOF_LAUNCHER > "$BIN_DIR/mhztools"
 #!/usr/bin/env bash
-exec "$HOME/.local/share/MHZTools/mhztools" --no-sandbox "$@" 2>/dev/null || exec "/opt/MHZTools/mhztools" --no-sandbox "$@"
+exec "$INSTALL_DIR/mhztools" --no-sandbox "\$@"
 EOF_LAUNCHER
 chmod +x "$BIN_DIR/mhztools"
 
 # Create application icon if profile_avatar or icon exists
+ICON_PATH=""
 if [ -f "$INSTALL_DIR/resources/app.asar.unpacked/profile_avatar.jpg" ]; then
     cp "$INSTALL_DIR/resources/app.asar.unpacked/profile_avatar.jpg" "$ICON_DIR/mhztools.jpg" 2>/dev/null || true
+    ICON_PATH="$ICON_DIR/mhztools.jpg"
 fi
 
-# Create FreeDesktop .desktop shortcut
-cat << 'EOF_DESKTOP' > "$APP_DIR/mhztools.desktop"
+# Create FreeDesktop .desktop shortcut with full absolute path
+cat << EOF_DESKTOP > "$APP_DIR/mhztools.desktop"
 [Desktop Entry]
 Name=MHZ Tools 2.0
 GenericName=Security & Digital Forensics Suite
 Comment=Comprehensive client-side security, cryptography, malware analysis, and digital forensics suite
-Exec=mhztools --no-sandbox %U
+Path=$INSTALL_DIR
+Exec="$INSTALL_DIR/mhztools" --no-sandbox %U
+Icon=$ICON_PATH
 Terminal=false
 Type=Application
 Categories=Utility;Security;Development;
@@ -110,25 +114,23 @@ StartupWMClass=mhztools
 Keywords=Security;Cryptography;Malware;Forensics;Analysis;
 EOF_DESKTOP
 
-chmod 644 "$APP_DIR/mhztools.desktop"
+chmod 755 "$APP_DIR/mhztools.desktop"
 
 # Also place shortcut on User's Desktop if directory exists
 if [ -d "$HOME/Desktop" ]; then
     cp "$APP_DIR/mhztools.desktop" "$HOME/Desktop/MHZTools.desktop" 2>/dev/null || true
     chmod +x "$HOME/Desktop/MHZTools.desktop" 2>/dev/null || true
+    gio set "$HOME/Desktop/MHZTools.desktop" metadata::trusted true 2>/dev/null || true
 fi
 
 # Create Uninstaller script
-cat << 'EOF_UNINSTALL' > "$INSTALL_DIR/uninstall.sh"
+cat << EOF_UNINSTALL > "$INSTALL_DIR/uninstall.sh"
 #!/usr/bin/env bash
 echo "Uninstalling MHZ Tools 2.0..."
-rm -f "$HOME/.local/bin/mhztools" 2>/dev/null || true
-rm -f "/usr/local/bin/mhztools" 2>/dev/null || true
-rm -f "$HOME/.local/share/applications/mhztools.desktop" 2>/dev/null || true
-rm -f "/usr/share/applications/mhztools.desktop" 2>/dev/null || true
+rm -f "$BIN_DIR/mhztools" 2>/dev/null || true
+rm -f "$APP_DIR/mhztools.desktop" 2>/dev/null || true
 rm -f "$HOME/Desktop/MHZTools.desktop" 2>/dev/null || true
-rm -rf "$HOME/.local/share/MHZTools" 2>/dev/null || true
-rm -rf "/opt/MHZTools" 2>/dev/null || true
+rm -rf "$INSTALL_DIR" 2>/dev/null || true
 echo "MHZ Tools 2.0 has been successfully uninstalled from your system."
 EOF_UNINSTALL
 chmod +x "$INSTALL_DIR/uninstall.sh"
