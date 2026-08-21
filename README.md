@@ -121,16 +121,25 @@ Output binaries in `dist/`:
 - `dist/MHZTools 2.0 Setup 2.0.0.exe` (NSIS Windows Installer)
 - `dist/MHZTools 2.0 2.0.0.exe` (Standalone Portable Executable)
 
-#### Linux (Universal .tar.gz, .zip & Binaries):
+#### Linux (Setup Installer Wizard & Portable Packages):
 ```bash
 npm run package:linux
 ```
 Output packages in `dist/`:
+- `dist/MHZTools-2.0-Setup-Linux.run` (Self-Extracting Setup Installer Wizard)
+- `dist/MHZTools-2.0-Setup-Linux.sh` (Bash Setup Installer Script)
 - `dist/mhz-tools-2.0.0.tar.gz` (Universal Linux Tarball)
 - `dist/mhz-tools-2.0.0.zip` (Universal Linux Zip)
 - `dist/linux-unpacked/` (Pre-extracted portable directory)
 
-To run on any 64-bit Linux system:
+To install on any Linux system (Ubuntu, Debian, Kali, Fedora, Arch, CentOS, Manjaro, openSUSE):
+```bash
+# Run the Setup Wizard Installer (creates menu launcher, desktop shortcut & bin symlink)
+chmod +x MHZTools-2.0-Setup-Linux.run
+./MHZTools-2.0-Setup-Linux.run
+```
+
+Or run standalone without installing:
 ```bash
 tar -xzf mhz-tools-2.0.0.tar.gz
 cd linux-unpacked
