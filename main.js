@@ -4,9 +4,11 @@ const fs = require('fs');
 const { spawn, exec, execSync } = require('child_process');
 const https = require('https');
 
-// Fix Chromium SUID sandbox error on Linux (Ubuntu, Debian, Kali, etc.)
+// Fix Chromium sandbox & GPU errors on Linux (Ubuntu, Debian, Kali, etc.)
 if (process.platform === 'linux') {
     app.commandLine.appendSwitch('no-sandbox');
+    app.commandLine.appendSwitch('disable-gpu-sandbox');
+    app.commandLine.appendSwitch('disable-setuid-sandbox');
 }
 
 let mainWindow = null;
