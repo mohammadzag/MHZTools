@@ -81,10 +81,15 @@ rm -f "$TEMP_TAR"
 echo -e "\${BLUE}[3/5] Setting executable permissions...\${RESET}"
 chmod -R 755 "$INSTALL_DIR"
 chmod +x "$INSTALL_DIR/mhztools"
-chmod 4755 "$INSTALL_DIR/chrome-sandbox" 2>/dev/null || true
 
 echo -e "\${BLUE}[4/5] Creating application shortcuts & menu launcher...\${RESET}"
-ln -sf "$INSTALL_DIR/mhztools" "$BIN_DIR/mhztools"
+
+# Create terminal launcher script with --no-sandbox flag
+cat << 'EOF_LAUNCHER' > "$BIN_DIR/mhztools"
+#!/usr/bin/env bash
+exec "$HOME/.local/share/MHZTools/mhztools" --no-sandbox "$@" 2>/dev/null || exec "/opt/MHZTools/mhztools" --no-sandbox "$@"
+EOF_LAUNCHER
+chmod +x "$BIN_DIR/mhztools"
 
 # Create application icon if profile_avatar or icon exists
 if [ -f "$INSTALL_DIR/resources/app.asar.unpacked/profile_avatar.jpg" ]; then
@@ -97,7 +102,7 @@ cat << 'EOF_DESKTOP' > "$APP_DIR/mhztools.desktop"
 Name=MHZ Tools 2.0
 GenericName=Security & Digital Forensics Suite
 Comment=Comprehensive client-side security, cryptography, malware analysis, and digital forensics suite
-Exec=mhztools %U
+Exec=mhztools --no-sandbox %U
 Terminal=false
 Type=Application
 Categories=Utility;Security;Development;
@@ -141,7 +146,7 @@ echo ""
 read -p "Would you like to launch MHZ Tools 2.0 now? (Y/n): " launch_choice
 case "$launch_choice" in 
   n|N ) exit 0;;
-  * ) "$INSTALL_DIR/mhztools" & disown;;
+  * ) "$INSTALL_DIR/mhztools" --no-sandbox & disown;;
 esac
 
 exit 0
