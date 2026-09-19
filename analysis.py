@@ -676,6 +676,51 @@ def generate_single_plot_base64(df, plot_type, col_x=None, col_y=None):
             autotext.set_color('#ffffff')
             autotext.set_fontsize(8)
         ax.set_title("Pie Chart: {}".format(col_x), pad=15, color=PRIMARY, fontweight="bold")
+
+    elif plot_type == "bar":
+        if not col_x or col_x not in df.columns:
+            plt.close(fig)
+            return ""
+        counts = df[col_x].astype(str).value_counts().head(20)
+        if len(counts) == 0:
+            plt.close(fig)
+            return ""
+        colors = plt.cm.viridis(np.linspace(0.2, 0.85, max(len(counts), 1)))
+        ax.bar(counts.index.astype(str), counts.values, color=colors, edgecolor='#1a3221', linewidth=0.5)
+        ax.set_xlabel(col_x)
+        ax.set_ylabel('Count')
+        ax.set_title("Bar Chart: {}".format(col_x), pad=15, color=PRIMARY, fontweight="bold")
+        plt.setp(ax.get_xticklabels(), rotation=35, ha='right', fontsize=8)
+
+    elif plot_type == "line":
+        if not col_x or col_x not in df.columns:
+            plt.close(fig)
+            return ""
+        y_vals = pd.to_numeric(df[col_x], errors='coerce').dropna().values
+        if len(y_vals) == 0:
+            plt.close(fig)
+            return ""
+        ax.plot(y_vals, color=PRIMARY, marker='o', markersize=3, linewidth=1.5)
+        ax.set_xlabel('Index')
+        ax.set_ylabel(col_x)
+        ax.set_title("Line Trend: {}".format(col_x), pad=15, color=PRIMARY, fontweight="bold")
+
+    elif plot_type == "regression" or plot_type == "scatter":
+        if not col_x or not col_y or col_x not in df.columns or col_y not in df.columns:
+            plt.close(fig)
+            return ""
+        val_x = pd.to_numeric(df[col_x], errors='coerce')
+        val_y = pd.to_numeric(df[col_y], errors='coerce')
+        valid = (~val_x.isna()) & (~val_y.isna())
+        if valid.sum() >= 2:
+            sns.regplot(x=val_x[valid], y=val_y[valid], ax=ax, color=PRIMARY,
+                        scatter_kws={'alpha': 0.6, 's': 30}, line_kws={'color': '#ef4444', 'linewidth': 2})
+            ax.set_xlabel(col_x)
+            ax.set_ylabel(col_y)
+            ax.set_title("Regression & Scatter: {} vs {}".format(col_x, col_y), pad=15, color=PRIMARY, fontweight="bold")
+        else:
+            plt.close(fig)
+            return ""
     else:
         plt.close(fig)
         return ""
@@ -705,7 +750,10 @@ def run_report_images(df, params):
     inc_hist = params.get("includeHistogram", True)
     inc_norm = params.get("includeNorm", True)
     inc_pie = params.get("includePie", True)
-    inc_pair = params.get("includePair", False)
+    inc_bar = params.get("includeBar", True)
+    inc_line = params.get("includeLine", True)
+    inc_scatter = params.get("includeScatter", True)
+    inc_pair = params.get("includePair", True)
 
     # 1. Box plot of numeric columns
     if inc_box and len(numeric_cols) > 0:
@@ -719,7 +767,7 @@ def run_report_images(df, params):
         if heat_b64:
             results.append({"title": "Pearson Correlation Matrix Heatmap", "data": heat_b64})
 
-    # 3. Distribution histograms & normal curves for numeric columns
+    # 3. Distribution histograms, normal curves, line trends for numeric columns
     for col in numeric_cols:
         if inc_hist:
             hist_b64 = generate_single_plot_base64(use_df, "histogram", col)
@@ -731,15 +779,30 @@ def run_report_images(df, params):
             if norm_b64:
                 results.append({"title": "Normal Curve & Std Dev Bounds — {}".format(col), "data": norm_b64})
 
-    # 4. Pie charts for categorical features
-    if inc_pie:
-        for col in (categorical_cols if categorical_cols else use_df.columns):
-            if use_df[col].nunique() <= 20 and len(use_df[col].dropna()) > 0:
-                pie_b64 = generate_single_plot_base64(use_df, "pie", col)
-                if pie_b64:
-                    results.append({"title": "Pie Chart Category Distribution — {}".format(col), "data": pie_b64})
+        if inc_line:
+            line_b64 = generate_single_plot_base64(use_df, "line", col)
+            if line_b64:
+                results.append({"title": "Line Trend Graph — {}".format(col), "data": line_b64})
 
-    # 5. Pair Plot Scatter Matrix
+    # 4. Bar charts and Pie charts for categorical & discrete columns
+    for col in (categorical_cols if categorical_cols else use_df.columns):
+        if inc_bar and use_df[col].nunique() <= 30 and len(use_df[col].dropna()) > 0:
+            bar_b64 = generate_single_plot_base64(use_df, "bar", col)
+            if bar_b64:
+                results.append({"title": "Bar Chart Distribution — {}".format(col), "data": bar_b64})
+
+        if inc_pie and use_df[col].nunique() <= 20 and len(use_df[col].dropna()) > 0:
+            pie_b64 = generate_single_plot_base64(use_df, "pie", col)
+            if pie_b64:
+                results.append({"title": "Pie Chart Category Distribution — {}".format(col), "data": pie_b64})
+
+    # 5. Scatter Plot & Regression between top 2 numeric features
+    if inc_scatter and len(numeric_cols) >= 2:
+        scat_b64 = generate_single_plot_base64(use_df, "regression", numeric_cols[0], numeric_cols[1])
+        if scat_b64:
+            results.append({"title": "Linear Regression & Scatter Plot ({} vs {})".format(numeric_cols[0], numeric_cols[1]), "data": scat_b64})
+
+    # 6. Pair Plot Scatter Matrix
     if inc_pair and len(numeric_cols) >= 2:
         pair_b64 = generate_single_plot_base64(use_df, "pairplot")
         if pair_b64:

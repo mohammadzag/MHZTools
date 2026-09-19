@@ -2205,6 +2205,27 @@ function setupExportEvents() {
         });
     }
 
+    const btnReportSelectAll = document.getElementById('btn-report-select-all');
+    const btnReportDeselectAll = document.getElementById('btn-report-deselect-all');
+
+    if (btnReportSelectAll) {
+        btnReportSelectAll.addEventListener('click', () => {
+            const container = document.querySelector('#analysis-export .card:nth-child(2)');
+            if (container) {
+                container.querySelectorAll('input[type=checkbox]').forEach(cb => { cb.checked = true; });
+            }
+        });
+    }
+
+    if (btnReportDeselectAll) {
+        btnReportDeselectAll.addEventListener('click', () => {
+            const container = document.querySelector('#analysis-export .card:nth-child(2)');
+            if (container) {
+                container.querySelectorAll('input[type=checkbox]').forEach(cb => { cb.checked = false; });
+            }
+        });
+    }
+
     if (btnExportData) {
         btnExportData.addEventListener('click', () => {
             const format = document.getElementById('export-data-format').value;
@@ -2293,7 +2314,12 @@ async function generateExecutiveReport() {
     const incChartHist = document.getElementById('report-chart-hist')?.checked ?? true;
     const incChartNorm = document.getElementById('report-chart-norm')?.checked ?? true;
     const incChartPie = document.getElementById('report-chart-pie')?.checked ?? true;
+    const incChartBar = document.getElementById('report-chart-bar')?.checked ?? true;
+    const incChartLine = document.getElementById('report-chart-line')?.checked ?? true;
+    const incChartScatter = document.getElementById('report-chart-scatter')?.checked ?? true;
+    const incChartPair = document.getElementById('report-chart-pair')?.checked ?? true;
     const incPreview = document.getElementById('report-inc-preview')?.checked ?? true;
+    const previewRowsChoice = document.getElementById('report-preview-rows')?.value || '10';
 
     if (analysisState.dataset.length === 0) {
         alert("No dataset loaded to export.");
@@ -2432,7 +2458,11 @@ async function generateExecutiveReport() {
                 includeHeatmap: incChartHeatmap,
                 includeHistogram: incChartHist,
                 includeNorm: incChartNorm,
-                includePie: incChartPie
+                includePie: incChartPie,
+                includeBar: incChartBar,
+                includeLine: incChartLine,
+                includeScatter: incChartScatter,
+                includePair: incChartPair
             });
             if (resImg.success) {
                 imgUrls = JSON.parse(resImg.output);
@@ -2457,7 +2487,8 @@ async function generateExecutiveReport() {
 
         let previewHtml = "";
         if (incPreview && analysisState.cleanedDataset.length > 0) {
-            const sampleRows = analysisState.cleanedDataset.slice(0, 10);
+            const limit = previewRowsChoice === 'all' ? analysisState.cleanedDataset.length : parseInt(previewRowsChoice, 10) || 10;
+            const sampleRows = analysisState.cleanedDataset.slice(0, limit);
             const cols = analysisState.columns || Object.keys(sampleRows[0]);
             let ths = cols.map(c => `<th>${c}</th>`).join('');
             let trs = sampleRows.map((row, idx) => {
@@ -2466,7 +2497,7 @@ async function generateExecutiveReport() {
             }).join('');
             previewHtml = `
             <div class="report-card">
-                <h3>Cleaned Dataset Sample (First ${sampleRows.length} Records)</h3>
+                <h3>Cleaned Dataset Sample (${previewRowsChoice === 'all' ? 'All' : 'First ' + sampleRows.length} Records)</h3>
                 <div style="overflow-x:auto;">
                     <table class="report-table">
                         <thead>

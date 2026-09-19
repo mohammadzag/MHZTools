@@ -1518,54 +1518,88 @@
                                 </div>
                                 <p class="dim" style="margin-bottom: 15px;">Choose the important findings, metrics, and charts to include in the executive report.</p>
                                 
-                                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; background-color: var(--bg-base); padding: 12px; border-radius: var(--border-radius); border: 1px solid var(--border-color);">
-                                    <label style="font-weight: 600; font-size: 12px; display: block; margin-bottom: 2px;">Report Sections to Include:</label>
+                                <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; background-color: var(--bg-base); padding: 14px; border-radius: var(--border-radius); border: 1px solid var(--border-color);">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border-color); padding-bottom: 6px;">
+                                        <label style="font-weight: 700; font-size: 12px; margin:0; text-transform: uppercase; color: var(--primary-color);">Report Sections to Include:</label>
+                                        <div style="display:flex; gap:6px;">
+                                            <button type="button" id="btn-report-select-all" class="btn btn-secondary" style="font-size:10px; padding:2px 6px; height:auto; cursor:pointer;">Select All</button>
+                                            <button type="button" id="btn-report-deselect-all" class="btn btn-secondary" style="font-size:10px; padding:2px 6px; height:auto; cursor:pointer;">Clear All</button>
+                                        </div>
+                                    </div>
                                     
-                                    <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
-                                        <input type="checkbox" id="report-inc-overview" checked style="width: 14px; height: 14px; margin: 0;"> Dataset Overview &amp; Key Metrics
-                                    </label>
-
-                                    <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
-                                        <input type="checkbox" id="report-inc-stats" checked style="width: 14px; height: 14px; margin: 0;"> Summary Statistics Table (Mean, Median, Std Dev, Min/Max)
-                                    </label>
-                                    
-                                    <div>
+                                    <!-- Core Data Analysis Sections -->
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                                         <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
-                                            <input type="checkbox" id="report-inc-chi" checked style="width: 14px; height: 14px; margin: 0;"> Chi-Square Independence Test &amp; Pairwise Matrix
+                                            <input type="checkbox" id="report-inc-overview" checked style="width: 14px; height: 14px; margin: 0; accent-color: var(--primary-color);"> Dataset Overview &amp; Metrics
                                         </label>
-                                        <div style="margin-left: 22px; margin-top: 4px;">
-                                            <label style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); cursor: pointer;">
-                                                <input type="checkbox" id="report-chi-sig-only" style="width: 12px; height: 12px; margin: 0;"> Only include statistically significant pairs (p &lt; 0.05)
+
+                                        <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
+                                            <input type="checkbox" id="report-inc-stats" checked style="width: 14px; height: 14px; margin: 0; accent-color: var(--primary-color);"> Numerical Summary Stats
+                                        </label>
+                                        
+                                        <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
+                                            <input type="checkbox" id="report-inc-chi" checked style="width: 14px; height: 14px; margin: 0; accent-color: var(--primary-color);"> Chi-Square Independence Matrix
+                                        </label>
+
+                                        <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
+                                            <input type="checkbox" id="report-chi-sig-only" style="width: 14px; height: 14px; margin: 0; accent-color: var(--primary-color);"> Only Sig. Chi-Square (p &lt; 0.05)
+                                        </label>
+                                    </div>
+
+                                    <!-- Visualizations & Full Plot Gallery -->
+                                    <div style="border-top: 1px solid var(--border-color); padding-top: 8px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                            <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; cursor: pointer; margin:0;">
+                                                <input type="checkbox" id="report-inc-charts" checked style="width: 14px; height: 14px; margin: 0; accent-color: var(--primary-color);"> Visualizations &amp; Plot Gallery
+                                            </label>
+                                        </div>
+                                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 6px; padding-left: 6px;">
+                                            <label class="chi-col-check-label" style="font-size:11px;">
+                                                <input type="checkbox" id="report-chart-box" checked> Box Plots
+                                            </label>
+                                            <label class="chi-col-check-label" style="font-size:11px;">
+                                                <input type="checkbox" id="report-chart-heatmap" checked> Correlation Heatmap
+                                            </label>
+                                            <label class="chi-col-check-label" style="font-size:11px;">
+                                                <input type="checkbox" id="report-chart-hist" checked> Histograms
+                                            </label>
+                                            <label class="chi-col-check-label" style="font-size:11px;">
+                                                <input type="checkbox" id="report-chart-norm" checked> Normal Curves
+                                            </label>
+                                            <label class="chi-col-check-label" style="font-size:11px;">
+                                                <input type="checkbox" id="report-chart-pie" checked> Pie Charts
+                                            </label>
+                                            <label class="chi-col-check-label" style="font-size:11px;">
+                                                <input type="checkbox" id="report-chart-bar" checked> Bar Charts
+                                            </label>
+                                            <label class="chi-col-check-label" style="font-size:11px;">
+                                                <input type="checkbox" id="report-chart-line" checked> Line Graphs
+                                            </label>
+                                            <label class="chi-col-check-label" style="font-size:11px;">
+                                                <input type="checkbox" id="report-chart-scatter" checked> Scatter / Regression
+                                            </label>
+                                            <label class="chi-col-check-label" style="font-size:11px;">
+                                                <input type="checkbox" id="report-chart-pair" checked> Pair Plot Matrix
                                             </label>
                                         </div>
                                     </div>
 
-                                    <div>
-                                        <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
-                                            <input type="checkbox" id="report-inc-charts" checked style="width: 14px; height: 14px; margin: 0;"> Visualizations &amp; Plot Gallery
+                                    <!-- Data Sample Preview Table with Row Count -->
+                                    <div style="border-top: 1px solid var(--border-color); padding-top: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                                        <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer; margin: 0;">
+                                            <input type="checkbox" id="report-inc-preview" checked style="width: 14px; height: 14px; margin: 0; accent-color: var(--primary-color);"> Cleaned Data Sample Table
                                         </label>
-                                        <div style="margin-left: 22px; margin-top: 6px; display: flex; flex-wrap: wrap; gap: 10px; font-size: 11px; color: var(--text-muted);">
-                                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
-                                                <input type="checkbox" id="report-chart-box" checked style="width: 12px; height: 12px; margin: 0;"> Box Plots
-                                            </label>
-                                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
-                                                <input type="checkbox" id="report-chart-heatmap" checked style="width: 12px; height: 12px; margin: 0;"> Correlation Heatmap
-                                            </label>
-                                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
-                                                <input type="checkbox" id="report-chart-hist" checked style="width: 12px; height: 12px; margin: 0;"> Histograms
-                                            </label>
-                                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
-                                                <input type="checkbox" id="report-chart-norm" checked style="width: 12px; height: 12px; margin: 0;"> Normal Curves
-                                            </label>
-                                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
-                                                <input type="checkbox" id="report-chart-pie" checked style="width: 12px; height: 12px; margin: 0;"> Pie Charts
-                                            </label>
+                                        <div style="display: flex; align-items: center; gap: 6px;">
+                                            <span style="font-size: 11px; color: var(--text-muted);">Rows:</span>
+                                            <select id="report-preview-rows" class="custom-select custom-select-sm" style="font-size: 11px; padding: 2px 6px; width: auto;">
+                                                <option value="10">First 10 Rows</option>
+                                                <option value="25">First 25 Rows</option>
+                                                <option value="50">First 50 Rows</option>
+                                                <option value="100">First 100 Rows</option>
+                                                <option value="all">All Rows</option>
+                                            </select>
                                         </div>
                                     </div>
-
-                                    <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
-                                        <input type="checkbox" id="report-inc-preview" checked style="width: 14px; height: 14px; margin: 0;"> Cleaned Data Sample Table (First 10 Rows)
-                                    </label>
                                 </div>
                                 
                                 <div style="display: flex; gap: 10px;">
