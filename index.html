@@ -1483,19 +1483,30 @@
                                     <i data-lucide="file-spreadsheet" class="card-header-icon"></i>
                                     <h2>Export Cleaned Dataset</h2>
                                 </div>
-                                <p class="dim" style="margin-bottom: 15px;">Save your cleaned, deduplicated, and standardized dataset to your local storage.</p>
+                                <p class="dim" style="margin-bottom: 15px;">Choose columns and export your cleaned, deduplicated dataset to local storage.</p>
                                 
                                 <div class="form-group">
                                     <label for="export-data-format">File Format</label>
-                                    <select id="export-data-format" class="custom-select custom-select-sm" style="width: 100%; margin-bottom: 15px; padding: 6px; font-size: 13px;">
+                                    <select id="export-data-format" class="custom-select custom-select-sm" style="width: 100%; margin-bottom: 12px; padding: 6px; font-size: 13px;">
                                         <option value="csv">Comma-Separated Values (.csv)</option>
                                         <option value="xlsx">Excel Spreadsheet (.xlsx)</option>
                                         <option value="json">JSON Array of Objects (.json)</option>
                                     </select>
                                 </div>
+
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+                                        <label style="font-weight: 600; font-size: 12px; margin:0;">Columns to Include:</label>
+                                        <div style="display:flex; gap:6px;">
+                                            <button type="button" id="btn-export-select-all" class="btn btn-secondary" style="font-size:11px; padding:2px 8px; cursor:pointer; height:auto;">Select All</button>
+                                            <button type="button" id="btn-export-deselect-all" class="btn btn-secondary" style="font-size:11px; padding:2px 8px; cursor:pointer; height:auto;">Deselect All</button>
+                                        </div>
+                                    </div>
+                                    <div id="export-col-checkboxes" class="chi-col-picker" style="max-height: 140px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 8px; background: var(--bg-base);"></div>
+                                </div>
                                 
                                 <button id="btn-export-dataset" class="btn btn-primary" style="width: 100%;" type="button">
-                                    <i data-lucide="download"></i> Download Cleaned Data
+                                    <i data-lucide="download"></i> Download Selected Data
                                 </button>
                             </div>
 
@@ -1505,18 +1516,55 @@
                                     <i data-lucide="file-text" class="card-header-icon"></i>
                                     <h2>Generate Analysis Report</h2>
                                 </div>
-                                <p class="dim" style="margin-bottom: 15px;">Create a complete summary report containing metadata, statistics, and embedded visualizations.</p>
+                                <p class="dim" style="margin-bottom: 15px;">Choose the important findings, metrics, and charts to include in the executive report.</p>
                                 
                                 <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; background-color: var(--bg-base); padding: 12px; border-radius: var(--border-radius); border: 1px solid var(--border-color);">
-                                    <label style="font-weight: 600; font-size: 12px; display: block; margin-bottom: 4px;">Include Sections:</label>
+                                    <label style="font-weight: 600; font-size: 12px; display: block; margin-bottom: 2px;">Report Sections to Include:</label>
+                                    
                                     <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
-                                        <input type="checkbox" id="report-inc-stats" checked style="width: 14px; height: 14px; margin: 0;"> Summary Statistics Table
+                                        <input type="checkbox" id="report-inc-overview" checked style="width: 14px; height: 14px; margin: 0;"> Dataset Overview &amp; Key Metrics
                                     </label>
+
                                     <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
-                                        <input type="checkbox" id="report-inc-chi" checked style="width: 14px; height: 14px; margin: 0;"> Chi-Square Test Contingency Matrix & Results
+                                        <input type="checkbox" id="report-inc-stats" checked style="width: 14px; height: 14px; margin: 0;"> Summary Statistics Table (Mean, Median, Std Dev, Min/Max)
                                     </label>
+                                    
+                                    <div>
+                                        <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
+                                            <input type="checkbox" id="report-inc-chi" checked style="width: 14px; height: 14px; margin: 0;"> Chi-Square Independence Test &amp; Pairwise Matrix
+                                        </label>
+                                        <div style="margin-left: 22px; margin-top: 4px;">
+                                            <label style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); cursor: pointer;">
+                                                <input type="checkbox" id="report-chi-sig-only" style="width: 12px; height: 12px; margin: 0;"> Only include statistically significant pairs (p &lt; 0.05)
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
+                                            <input type="checkbox" id="report-inc-charts" checked style="width: 14px; height: 14px; margin: 0;"> Visualizations &amp; Plot Gallery
+                                        </label>
+                                        <div style="margin-left: 22px; margin-top: 6px; display: flex; flex-wrap: wrap; gap: 10px; font-size: 11px; color: var(--text-muted);">
+                                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                                <input type="checkbox" id="report-chart-box" checked style="width: 12px; height: 12px; margin: 0;"> Box Plots
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                                <input type="checkbox" id="report-chart-heatmap" checked style="width: 12px; height: 12px; margin: 0;"> Correlation Heatmap
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                                <input type="checkbox" id="report-chart-hist" checked style="width: 12px; height: 12px; margin: 0;"> Histograms
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                                <input type="checkbox" id="report-chart-norm" checked style="width: 12px; height: 12px; margin: 0;"> Normal Curves
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                                                <input type="checkbox" id="report-chart-pie" checked style="width: 12px; height: 12px; margin: 0;"> Pie Charts
+                                            </label>
+                                        </div>
+                                    </div>
+
                                     <label class="checkbox-container" style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
-                                        <input type="checkbox" id="report-inc-charts" checked style="width: 14px; height: 14px; margin: 0;"> Interactive Plots (Box Plot & Normal Distribution)
+                                        <input type="checkbox" id="report-inc-preview" checked style="width: 14px; height: 14px; margin: 0;"> Cleaned Data Sample Table (First 10 Rows)
                                     </label>
                                 </div>
                                 

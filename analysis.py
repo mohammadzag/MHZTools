@@ -691,32 +691,57 @@ def generate_single_plot_base64(df, plot_type, col_x=None, col_y=None):
 
 def run_report_images(df, params):
     results = []
-    numeric_cols = [c for c in df.columns if pd.to_numeric(df[c], errors='coerce').notna().sum() > 0]
+    selected_cols = params.get("cols")
+    if selected_cols and isinstance(selected_cols, list) and len(selected_cols) > 0:
+        use_df = df[[c for c in selected_cols if c in df.columns]]
+    else:
+        use_df = df
+        
+    numeric_cols = [c for c in use_df.columns if pd.to_numeric(use_df[c], errors='coerce').notna().sum() > 0]
+    categorical_cols = [c for c in use_df.columns if c not in numeric_cols]
+
+    inc_box = params.get("includeBox", True)
+    inc_heat = params.get("includeHeatmap", True)
+    inc_hist = params.get("includeHistogram", True)
+    inc_norm = params.get("includeNorm", True)
+    inc_pie = params.get("includePie", True)
+    inc_pair = params.get("includePair", False)
 
     # 1. Box plot of numeric columns
-    box_b64 = generate_single_plot_base64(df, "boxplot")
-    if box_b64:
-        results.append({"title": "Box & Whisker Plot (All Numeric Features)", "data": box_b64})
+    if inc_box and len(numeric_cols) > 0:
+        box_b64 = generate_single_plot_base64(use_df, "boxplot")
+        if box_b64:
+            results.append({"title": "Box & Whisker Plot (Numeric Features)", "data": box_b64})
 
     # 2. Correlation heatmap
-    if len(numeric_cols) >= 2:
-        heat_b64 = generate_single_plot_base64(df, "heatmap")
+    if inc_heat and len(numeric_cols) >= 2:
+        heat_b64 = generate_single_plot_base64(use_df, "heatmap")
         if heat_b64:
             results.append({"title": "Pearson Correlation Matrix Heatmap", "data": heat_b64})
 
     # 3. Distribution histograms & normal curves for numeric columns
     for col in numeric_cols:
-        hist_b64 = generate_single_plot_base64(df, "histogram", col)
-        if hist_b64:
-            results.append({"title": "Distribution Histogram — {}".format(col), "data": hist_b64})
+        if inc_hist:
+            hist_b64 = generate_single_plot_base64(use_df, "histogram", col)
+            if hist_b64:
+                results.append({"title": "Distribution Histogram — {}".format(col), "data": hist_b64})
 
-        norm_b64 = generate_single_plot_base64(df, "std-dev", col)
-        if norm_b64:
-            results.append({"title": "Normal Curve & Std Dev Bounds — {}".format(col), "data": norm_b64})
+        if inc_norm:
+            norm_b64 = generate_single_plot_base64(use_df, "std-dev", col)
+            if norm_b64:
+                results.append({"title": "Normal Curve & Std Dev Bounds — {}".format(col), "data": norm_b64})
 
-    # 4. Pair Plot Scatter Matrix
-    if len(numeric_cols) >= 2:
-        pair_b64 = generate_single_plot_base64(df, "pairplot")
+    # 4. Pie charts for categorical features
+    if inc_pie:
+        for col in (categorical_cols if categorical_cols else use_df.columns):
+            if use_df[col].nunique() <= 20 and len(use_df[col].dropna()) > 0:
+                pie_b64 = generate_single_plot_base64(use_df, "pie", col)
+                if pie_b64:
+                    results.append({"title": "Pie Chart Category Distribution — {}".format(col), "data": pie_b64})
+
+    # 5. Pair Plot Scatter Matrix
+    if inc_pair and len(numeric_cols) >= 2:
+        pair_b64 = generate_single_plot_base64(use_df, "pairplot")
         if pair_b64:
             results.append({"title": "Pair Plot Scatter Matrix", "data": pair_b64})
 

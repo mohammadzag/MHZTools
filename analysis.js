@@ -552,6 +552,19 @@ function syncSelectors() {
     const ySelect = document.getElementById('plot-y-select');
     if (xSelect) xSelect.innerHTML = cols.map(c => `<option value="${c}">${c}</option>`).join('');
     if (ySelect) ySelect.innerHTML = cols.map(c => `<option value="${c}">${c}</option>`).join('');
+
+    // Export Dataset: populate column selection checkboxes
+    const exportPicker = document.getElementById('export-col-checkboxes');
+    if (exportPicker) {
+        const prevChecked = new Set(
+            Array.from(exportPicker.querySelectorAll('input[type=checkbox]:checked')).map(el => el.value)
+        );
+        const isFirstInit = exportPicker.children.length === 0;
+        exportPicker.innerHTML = cols.map(c => `
+            <label class="chi-col-check-label">
+                <input type="checkbox" value="${c}" ${isFirstInit || prevChecked.has(c) ? 'checked' : ''}> ${c}
+            </label>`).join('');
+    }
 }
 
 function updatePlotSelectors() {
@@ -2145,13 +2158,15 @@ function loadSampleDataset() {
     alert("Sample dataset loaded! Includes outliers (e.g. Age 120, Incident_Count 45), duplicates, missing (NULL) values, inconsistent text casing, and non-numeric inputs for testing.");
 }
 
-function jsonToCsv(jsonArray) {
-    const headers = Object.keys(jsonArray[0]);
+function jsonToCsv(jsonArray, selectedCols) {
+    if (!jsonArray || jsonArray.length === 0) return '';
+    const headers = selectedCols && selectedCols.length > 0 ? selectedCols : Object.keys(jsonArray[0]);
     const csvRows = [headers.join(',')];
     
     jsonArray.forEach(obj => {
         const values = headers.map(hdr => {
-            const val = String(obj[hdr] || '');
+            const raw = obj[hdr];
+            const val = String(raw !== undefined && raw !== null ? raw : '');
             if (val.includes(',') || val.includes('"') || val.includes('\n')) {
                 return `"${val.replace(/"/g, '""')}"`;
             }
@@ -2169,26 +2184,67 @@ function setupExportEvents() {
     const btnExportData = document.getElementById('btn-export-dataset');
     const btnExportReport = document.getElementById('btn-export-report');
     const btnExportPng = document.getElementById('btn-export-chart-png');
+    const btnExportSelectAll = document.getElementById('btn-export-select-all');
+    const btnExportDeselectAll = document.getElementById('btn-export-deselect-all');
     
+    if (btnExportSelectAll) {
+        btnExportSelectAll.addEventListener('click', () => {
+            const picker = document.getElementById('export-col-checkboxes');
+            if (picker) {
+                picker.querySelectorAll('input[type=checkbox]').forEach(cb => { cb.checked = true; });
+            }
+        });
+    }
+
+    if (btnExportDeselectAll) {
+        btnExportDeselectAll.addEventListener('click', () => {
+            const picker = document.getElementById('export-col-checkboxes');
+            if (picker) {
+                picker.querySelectorAll('input[type=checkbox]').forEach(cb => { cb.checked = false; });
+            }
+        });
+    }
+
     if (btnExportData) {
         btnExportData.addEventListener('click', () => {
             const format = document.getElementById('export-data-format').value;
-            const data = analysisState.cleanedDataset;
-            if (data.length === 0) {
+            const fullData = analysisState.cleanedDataset;
+            if (fullData.length === 0) {
                 alert("No dataset loaded to export.");
                 return;
             }
+
+            const picker = document.getElementById('export-col-checkboxes');
+            let selectedCols = picker
+                ? Array.from(picker.querySelectorAll('input[type=checkbox]:checked')).map(el => el.value)
+                : [];
+            
+            if (selectedCols.length === 0) {
+                if (!picker || picker.children.length === 0) {
+                    selectedCols = analysisState.columns;
+                } else {
+                    alert("Please select at least one column to export.");
+                    return;
+                }
+            }
+            
+            // Filter dataset records to only include the selected columns
+            const filteredData = fullData.map(row => {
+                const item = {};
+                selectedCols.forEach(col => { item[col] = row[col]; });
+                return item;
+            });
             
             const baseName = "cleaned_dataset_" + new Date().toISOString().slice(0, 10);
             if (format === 'csv') {
-                const csv = jsonToCsv(data);
+                const csv = jsonToCsv(filteredData, selectedCols);
                 downloadFile(csv, 'text/csv;charset=utf-8;', baseName + '.csv');
             } else if (format === 'json') {
-                const json = JSON.stringify(data, null, 2);
+                const json = JSON.stringify(filteredData, null, 2);
                 downloadFile(json, 'application/json;charset=utf-8;', baseName + '.json');
             } else if (format === 'xlsx') {
                 try {
-                    const worksheet = XLSX.utils.json_to_sheet(data);
+                    const worksheet = XLSX.utils.json_to_sheet(filteredData);
                     const workbook = XLSX.utils.book_new();
                     XLSX.utils.book_append_sheet(workbook, worksheet, "Cleaned Dataset");
                     XLSX.writeFile(workbook, baseName + '.xlsx');
@@ -2227,10 +2283,18 @@ function downloadActiveChart() {
 }
 
 async function generateExecutiveReport() {
-    const incStats = document.getElementById('report-inc-stats').checked;
-    const incChi = document.getElementById('report-inc-chi').checked;
-    const incCharts = document.getElementById('report-inc-charts').checked;
-    
+    const incOverview = document.getElementById('report-inc-overview')?.checked ?? true;
+    const incStats = document.getElementById('report-inc-stats')?.checked ?? true;
+    const incChi = document.getElementById('report-inc-chi')?.checked ?? true;
+    const chiSigOnly = document.getElementById('report-chi-sig-only')?.checked ?? false;
+    const incCharts = document.getElementById('report-inc-charts')?.checked ?? true;
+    const incChartBox = document.getElementById('report-chart-box')?.checked ?? true;
+    const incChartHeatmap = document.getElementById('report-chart-heatmap')?.checked ?? true;
+    const incChartHist = document.getElementById('report-chart-hist')?.checked ?? true;
+    const incChartNorm = document.getElementById('report-chart-norm')?.checked ?? true;
+    const incChartPie = document.getElementById('report-chart-pie')?.checked ?? true;
+    const incPreview = document.getElementById('report-inc-preview')?.checked ?? true;
+
     if (analysisState.dataset.length === 0) {
         alert("No dataset loaded to export.");
         return;
@@ -2238,14 +2302,40 @@ async function generateExecutiveReport() {
     
     const btn = document.getElementById('btn-export-report');
     const origText = btn.innerHTML;
-    btn.innerHTML = `<i data-lucide="loader" style="animation: spin 1.5s linear infinite; display: inline-block;"></i> Generating Report & Graphs...`;
-    if (window.lucide) if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+    btn.innerHTML = `<i data-lucide="loader" style="animation: spin 1.5s linear infinite; display: inline-block;"></i> Generating Customized Report...`;
+    if (window.lucide && window.lucide.createIcons) lucide.createIcons();
     
     try {
         const timestamp = new Date().toLocaleString();
         const rowCount = analysisState.cleanedDataset.length;
         const colCount = analysisState.columns.length;
         
+        let overviewHtml = "";
+        if (incOverview) {
+            const numericCount = (analysisState.columns || []).filter(c => analysisState.columnTypes[c] === 'numeric').length;
+            const textCount = colCount - numericCount;
+            const missingValText = document.getElementById('meta-missing-vals')?.textContent || '0';
+            overviewHtml = `
+            <div class="metadata-grid">
+                <div class="meta-box">
+                    <span class="label">Total Records</span>
+                    <span class="value">${rowCount}</span>
+                </div>
+                <div class="meta-box">
+                    <span class="label">Total Variables</span>
+                    <span class="value">${colCount}</span>
+                </div>
+                <div class="meta-box">
+                    <span class="label">Numeric Features</span>
+                    <span class="value">${numericCount}</span>
+                </div>
+                <div class="meta-box">
+                    <span class="label">Categorical Features</span>
+                    <span class="value">${textCount}</span>
+                </div>
+            </div>`;
+        }
+
         let statsHtml = "";
         if (incStats) {
             const resStats = await window.electronAPI.runPythonAnalysis('summary_stats', analysisState.cleanedDataset, {});
@@ -2304,7 +2394,8 @@ async function generateExecutiveReport() {
                     return `<tr>${cells}</tr>`;
                 }).join('');
 
-                let pairDetailsHtml = pairs.map(p => {
+                const displayPairs = chiSigOnly ? pairs.filter(p => p.significant) : pairs;
+                let pairDetailsHtml = displayPairs.map(p => {
                     if (p.error) return '';
                     let cTrs = p.matrix ? p.matrix.map(r => `<tr><td><strong>${r.rowLabel}</strong></td>` + r.values.map(v => `<td>${v}</td>`).join('') + '</tr>').join('') : '';
                     let cHead = p.headers ? '<tr><th>' + p.colA + ' \\ ' + p.colB + '</th>' + p.headers.map(h => `<th>${h}</th>`).join('') + '</tr>' : '';
@@ -2326,7 +2417,7 @@ async function generateExecutiveReport() {
                             ${bodyTrs}
                         </table>
                     </div>
-                    ${pairDetailsHtml}
+                    ${pairDetailsHtml ? pairDetailsHtml : '<p class="dim">No statistically significant associations found between categorical pairs.</p>'}
                 </div>`;
             }
         }
@@ -2335,7 +2426,14 @@ async function generateExecutiveReport() {
         if (incCharts) {
             let imgUrls = [];
             const colX = document.getElementById('plot-x-select')?.value || '';
-            const resImg = await window.electronAPI.runPythonAnalysis('report_images', analysisState.cleanedDataset, { colX });
+            const resImg = await window.electronAPI.runPythonAnalysis('report_images', analysisState.cleanedDataset, {
+                colX,
+                includeBox: incChartBox,
+                includeHeatmap: incChartHeatmap,
+                includeHistogram: incChartHist,
+                includeNorm: incChartNorm,
+                includePie: incChartPie
+            });
             if (resImg.success) {
                 imgUrls = JSON.parse(resImg.output);
             }
@@ -2351,16 +2449,35 @@ async function generateExecutiveReport() {
                 });
                 chartsHtml = `
                 <div class="report-card">
-                    <h3>Embedded Plots & Visualizations</h3>
+                    <h3>Embedded Visualizations & Plots</h3>
                     ${plots}
                 </div>`;
-            } else {
-                chartsHtml = `
-                <div class="report-card">
-                    <h3>Visualizations</h3>
-                    <p class="dim">No active chart available and no numerical variables found to generate plots.</p>
-                </div>`;
             }
+        }
+
+        let previewHtml = "";
+        if (incPreview && analysisState.cleanedDataset.length > 0) {
+            const sampleRows = analysisState.cleanedDataset.slice(0, 10);
+            const cols = analysisState.columns || Object.keys(sampleRows[0]);
+            let ths = cols.map(c => `<th>${c}</th>`).join('');
+            let trs = sampleRows.map((row, idx) => {
+                let tds = cols.map(c => `<td>${row[c] !== undefined && row[c] !== null ? row[c] : ''}</td>`).join('');
+                return `<tr>${tds}</tr>`;
+            }).join('');
+            previewHtml = `
+            <div class="report-card">
+                <h3>Cleaned Dataset Sample (First ${sampleRows.length} Records)</h3>
+                <div style="overflow-x:auto;">
+                    <table class="report-table">
+                        <thead>
+                            <tr>${ths}</tr>
+                        </thead>
+                        <tbody>
+                            ${trs}
+                        </tbody>
+                    </table>
+                </div>
+            </div>`;
         }
         
         const reportContent = `<!DOCTYPE html>
@@ -2523,24 +2640,11 @@ async function generateExecutiveReport() {
             <p>Generated by MHZTools | ${timestamp}</p>
         </div>
         
-        <div class="metadata-grid">
-            <div class="meta-box">
-                <span class="label">Total Records Analyzed</span>
-                <span class="value">${rowCount}</span>
-            </div>
-            <div class="meta-box">
-                <span class="label">Variables Analyzed</span>
-                <span class="value">${colCount}</span>
-            </div>
-            <div class="meta-box">
-                <span class="label">Missing Imputed</span>
-                <span class="value">${document.getElementById('meta-missing-vals').textContent}</span>
-            </div>
-        </div>
-        
+        ${overviewHtml}
         ${statsHtml}
         ${chiHtml}
         ${chartsHtml}
+        ${previewHtml}
     </div>
 </body>
 </html>`;
