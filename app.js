@@ -333,7 +333,7 @@ function setupNavigation() {
         },
         'analysis-charts': {
             title: 'Visualisation Studio',
-            subtitle: 'Plot shaded distributions, box plots, heatmaps, scatter, bar, or line charts.'
+            subtitle: 'Plot shaded distributions, box plots, heatmaps, scatter, bar, pie, or line charts.'
         },
         'analysis-export': {
             title: 'Export Results & Reports',

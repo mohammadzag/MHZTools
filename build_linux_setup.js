@@ -3,11 +3,12 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const rootDir = __dirname;
+const pkg = require('./package.json');
 const distDir = path.join(rootDir, 'dist');
-const tarGzFile = path.join(distDir, 'mhz-tools-2.0.0.tar.gz');
+const tarGzFile = path.join(distDir, `mhz-tools-${pkg.version}.tar.gz`);
 
 if (!fs.existsSync(tarGzFile)) {
-    console.error("mhz-tools-2.0.0.tar.gz not found in dist/. Please run 'npm run package:linux' first.");
+    console.error(`mhz-tools-${pkg.version}.tar.gz not found in dist/. Please run 'npm run package:linux' first.`);
     process.exit(1);
 }
 

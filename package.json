@@ -1,6 +1,6 @@
 {
   "name": "mhz-tools",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "MHZ Tools 2.0 - Security, Cryptography, Data Analysis, Malware Static Analysis, C/C++ Architecture Converter, and Digital Forensics Suite",
   "main": "main.js",
   "scripts": {

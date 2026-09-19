@@ -1533,6 +1533,42 @@ function buildPlotlyChartConfig(plotType, cols, groupCol) {
             barmode: groupCol ? 'group' : undefined } };
     }
 
+    if (plotType === 'pie') {
+        const col = cols[0];
+        if (!col) return null;
+        const counts = {};
+        dataset.forEach(r => {
+            const v = String(r[col] ?? 'N/A');
+            counts[v] = (counts[v] || 0) + 1;
+        });
+        const sortedKeys = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+        let labels = sortedKeys;
+        let values = labels.map(l => counts[l]);
+        if (labels.length > 20) {
+            const top = sortedKeys.slice(0, 19);
+            const otherCount = sortedKeys.slice(19).reduce((sum, k) => sum + counts[k], 0);
+            labels = [...top, 'Other'];
+            values = [...top.map(k => counts[k]), otherCount];
+        }
+        const traces = [{
+            labels: labels,
+            values: values,
+            type: 'pie',
+            hole: 0.35,
+            marker: { colors: palette },
+            textinfo: 'label+percent',
+            hoverinfo: 'label+value+percent'
+        }];
+        return {
+            data: traces,
+            layout: {
+                ...baseLayout,
+                title: { text: `Pie Chart — ${col}` },
+                showlegend: true
+            }
+        };
+    }
+
     if (plotType === 'line') {
         const col = cols[0];
         let traces;
@@ -2021,6 +2057,37 @@ function renderLineChart(col, groupCol, container, layout) {
         const y = dataset.map(row => { const v = Number(row[col]); return isNaN(v) ? null : v; });
         traces = [{ x: dataset.map((_, i) => i), y, type: 'scatter', mode: 'lines+markers', line: { color: '#10b981', width: 2 }, marker: { color: '#34d399', size: 5 } }];
     }
+    Plotly.newPlot(container, traces, lyt, { responsive: true, displayModeBar: false });
+}
+
+// 8. Pie Chart — category distribution of a single column
+function renderPieChart(col, groupCol, container, layout) {
+    const dataset = analysisState.cleanedDataset;
+    const lyt = Object.assign({}, layout, {
+        title: { text: `Pie Chart — ${col}` },
+        showlegend: true
+    });
+    const palette = ['#10b981','#f59e0b','#3b82f6','#ef4444','#8b5cf6','#ec4899','#14b8a6','#f97316','#06b6d4','#84cc16'];
+    const counts = {};
+    dataset.forEach(row => { const v = String(row[col] ?? 'N/A'); counts[v] = (counts[v] || 0) + 1; });
+    const sortedKeys = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+    let labels = sortedKeys;
+    let values = labels.map(l => counts[l]);
+    if (labels.length > 20) {
+        const top = sortedKeys.slice(0, 19);
+        const otherCount = sortedKeys.slice(19).reduce((sum, k) => sum + counts[k], 0);
+        labels = [...top, 'Other'];
+        values = [...top.map(k => counts[k]), otherCount];
+    }
+    const traces = [{
+        labels,
+        values,
+        type: 'pie',
+        hole: 0.35,
+        marker: { colors: palette },
+        textinfo: 'label+percent',
+        hoverinfo: 'label+value+percent'
+    }];
     Plotly.newPlot(container, traces, lyt, { responsive: true, displayModeBar: false });
 }
 
@@ -2662,5 +2729,19 @@ function renderPlotlyChartJS(plotType, selectedCols, groupCol) {
         Plotly.newPlot(canvas, [{
             x: Object.keys(counts), y: Object.values(counts), type: 'bar', marker: { color: '#f59e0b' }
         }], { title: `Bar Chart — ${col}` });
+    } else if (plotType === 'pie') {
+        const col = selectedCols[0] || analysisState.columns[0];
+        let counts = {};
+        dataset.forEach(r => {
+            let val = String(r[col] || 'Missing');
+            counts[val] = (counts[val] || 0) + 1;
+        });
+        const sortedKeys = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+        Plotly.newPlot(canvas, [{
+            labels: sortedKeys,
+            values: sortedKeys.map(k => counts[k]),
+            type: 'pie',
+            hole: 0.35
+        }], { title: `Pie Chart — ${col}` });
     }
 }

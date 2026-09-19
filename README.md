@@ -1,6 +1,6 @@
 # MHZ Tools 2.0 — Comprehensive Security, Data Analysis & Digital Forensics Suite
 
-![MHZ Tools 2.0](https://img.shields.io/badge/MHZ_Tools-v2.0.0-10b981.svg?style=for-the-badge&logo=shield)
+![MHZ Tools 2.0.1](https://img.shields.io/badge/MHZ_Tools-v2.0.1-10b981.svg?style=for-the-badge&logo=shield)
 ![Platform](https://img.shields.io/badge/Platform-Windows_x64_%7C_ia32-0284c7.svg?style=for-the-badge&logo=windows)
 ![Architecture](https://img.shields.io/badge/Client--Side-Zero_Data_Leakage-10b981.svg?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-ISC-64748b.svg?style=for-the-badge)

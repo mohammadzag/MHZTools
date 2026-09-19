@@ -498,6 +498,20 @@ def run_plotting(df, params):
             ax.set_xlabel(col)
             ax.set_title("Bar Chart — {}".format(col), fontweight="bold", fontsize=11)
 
+        elif plot_type == "pie":
+            counts = df[col].astype(str).value_counts()
+            if len(counts) > 15:
+                top_counts = counts.head(14)
+                other_sum = counts.iloc[14:].sum()
+                counts = pd.concat([top_counts, pd.Series({'Other': other_sum})])
+            if len(counts) > 0:
+                cmap = plt.cm.tab20(np.linspace(0, 1, max(len(counts), 1)))
+                ax.pie(counts.values, labels=counts.index.astype(str), autopct='%1.1f%%', startangle=140,
+                       colors=cmap, wedgeprops=dict(edgecolor='white', linewidth=1.5, width=0.7))
+                ax.set_title("Pie Chart — {}".format(col), fontweight="bold", fontsize=11)
+            else:
+                ax.text(0.5, 0.5, "No data available to plot", ha='center', va='center')
+
         elif plot_type == "line":
             if group_col and group_col in df.columns:
                 y_vals = pd.to_numeric(df[col], errors='coerce')
@@ -640,6 +654,28 @@ def generate_single_plot_base64(df, plot_type, col_x=None, col_y=None):
         sns.heatmap(corr, annot=True, cmap='YlGn', fmt=".2f", ax=ax, square=True,
                     linewidths=0.5, linecolor='#1a3221', annot_kws={"size": 9, "color": "#212529"})
         ax.set_title('Pearson Correlation Heatmap', pad=15, color=PRIMARY, fontweight='bold')
+
+    elif plot_type == "pie":
+        if not col_x or col_x not in df.columns:
+            plt.close(fig)
+            return ""
+        counts = df[col_x].astype(str).value_counts()
+        if len(counts) > 12:
+            top_counts = counts.head(11)
+            other_sum = counts.iloc[11:].sum()
+            counts = pd.concat([top_counts, pd.Series({'Other': other_sum})])
+        if len(counts) == 0:
+            plt.close(fig)
+            return ""
+        cmap = plt.cm.Set2(np.linspace(0, 1, max(len(counts), 1)))
+        wedges, texts, autotexts = ax.pie(counts.values, labels=counts.index.astype(str), autopct='%1.1f%%', startangle=140,
+                                          colors=cmap, wedgeprops=dict(edgecolor='#0d160f', linewidth=1.5, width=0.7))
+        for text in texts:
+            text.set_color('#e2f1e6')
+        for autotext in autotexts:
+            autotext.set_color('#ffffff')
+            autotext.set_fontsize(8)
+        ax.set_title("Pie Chart: {}".format(col_x), pad=15, color=PRIMARY, fontweight="bold")
     else:
         plt.close(fig)
         return ""
